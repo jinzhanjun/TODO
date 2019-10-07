@@ -7,17 +7,18 @@
 //
 
 import UIKit
+import CoreData
 
 class ToDoListViewController: UITableViewController {
     
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Item.plist")
-    
-    /// 定义内容字典
-    lazy var listArray = Array<ItemModel>()
+    /// 定义CoreData数据上下文
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    /// 使用CoreData获取数据
+    lazy var listArray = Array<Item>()
     @IBAction func clearAllItems(_ sender: UIBarButtonItem) {
-        removeAll()
+//        removeAll()
     }
-    
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
@@ -29,10 +30,11 @@ class ToDoListViewController: UITableViewController {
         /// 定义一个action，用来添加新项目到字典中
         let action = UIAlertAction(title: "添加", style: .default) { (action) in
             if alertTextFeild.text != "" {
-                let newItem = ItemModel(text: alertTextFeild.text!, isDone: false)
+                let newItem = Item(context: self.context)
+                newItem.title = alertTextFeild.text
+                newItem.isDone = false
                 self.listArray.append(newItem)
                 self.saveItems()
-                self.tableView.reloadData()
             }
         }
         
@@ -50,12 +52,14 @@ class ToDoListViewController: UITableViewController {
         super.viewDidLoad()
         
         loadItems()
-        if listArray.isEmpty {
-            for i in 0..<20 {
-                let model = ItemModel(text: "新项目\(i)", isDone: false)
-                listArray.append(model)
-            }
-        }
+        
+        
+//        if listArray.isEmpty {
+//            for i in 0..<20 {
+//                let model = ItemModel(text: "新项目\(i)", isDone: false)
+//                listArray.append(model)
+//            }
+//        }
 //
 //
 //        if let items = defaults.array(forKey: "ListArray") as? [ItemModel] {
@@ -67,7 +71,7 @@ class ToDoListViewController: UITableViewController {
         /// 获取可重用cell
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoListItemCell", for: indexPath)
         // 设置cell的text
-        cell.textLabel?.text = listArray[indexPath.row].text
+        cell.textLabel?.text = listArray[indexPath.row].title
         cell.accessoryType = listArray[indexPath.row].isDone ? .checkmark : .none
         // 返回cell
         return cell
@@ -86,30 +90,66 @@ class ToDoListViewController: UITableViewController {
         } else {
             listArray[indexPath.row].isDone = true
         }
+        context.delete(listArray[indexPath.row])
+        listArray.remove(at: indexPath.row)
         // 保存模型
         saveItems()
-        tableView.beginUpdates()
-        tableView.reloadRows(at: [indexPath], with: .fade)
-        tableView.endUpdates()
+//        tableView.beginUpdates()
+//        tableView.reloadRows(at: [indexPath], with: .fade)
+//        tableView.endUpdates()
     }
     
     func saveItems() {
-        let encoder = PropertyListEncoder()
-        let data = try? encoder.encode(listArray)
-        if dataFilePath != nil {
-            try? data?.write(to: dataFilePath!)
-        }
+        
+        try? context.save()
+        tableView.reloadData()
+//        let encoder = PropertyListEncoder()
+//        let data = try? encoder.encode(listArray)
+//        if dataFilePath != nil {
+//            try? data?.write(to: dataFilePath!)
+//        }
     }
     func loadItems() {
-        if let data = try? Data(contentsOf: dataFilePath!) {
-            let decode = PropertyListDecoder()
-            listArray = (try? decode.decode([ItemModel].self, from: data)) ?? []
-        }
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        try? listArray = context.fetch(request)
+        tableView.reloadData()
+//        context.fetch([request])
+//        if let data = try? Data(contentsOf: dataFilePath!) {
+//            let decode = PropertyListDecoder()
+//            listArray = (try? decode.decode([ItemModel].self, from: data)) ?? []
+//        }
     }
-    func removeAll() {
-        listArray.removeAll()
-        try? FileManager.default.removeItem(at: dataFilePath!)
-        viewDidLoad()
+//    func removeAll() {
+//        listArray.removeAll()
+//        try? FileManager.default.removeItem(at: dataFilePath!)
+//        viewDidLoad()
+//    }
+}
+
+extension ToDoListViewController: UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        /// 定义Item的搜索请求
+        let request: NSFetchRequest<Item> = Item.fetchRequest()
+        /// 定义搜索预测内容
+        let predict = NSPredicate(format: "title CONTAINS[c] %@", searchBar.text!)
+        /// 定义搜索结果排序方式
+        let sortDescription = NSSortDescriptor(key: "title", ascending: true)
+        // 将搜索预测内容和搜索内容排序方式添加到搜索请求中
+        request.predicate = predict
+        request.sortDescriptors = [sortDescription]
+        
+        // 从context中获取请求的内容
+        try? listArray = context.fetch(request)
+        tableView.reloadData()
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchBar.text?.count == 0 {
+            DispatchQueue.main.async {
+                searchBar.resignFirstResponder()
+            }
+            loadItems()
+        }
     }
 }
 
