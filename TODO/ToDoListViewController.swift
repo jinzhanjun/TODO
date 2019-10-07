@@ -10,10 +10,14 @@ import UIKit
 
 class ToDoListViewController: UITableViewController {
     
-    let defaults = UserDefaults.standard
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Item.plist")
     
     /// 定义内容字典
-    var listArray = ["买面包", "敷面膜", "买手机", "买汽车"]
+    lazy var listArray = Array<ItemModel>()
+    @IBAction func clearAllItems(_ sender: UIBarButtonItem) {
+        removeAll()
+    }
+    
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
@@ -25,8 +29,9 @@ class ToDoListViewController: UITableViewController {
         /// 定义一个action，用来添加新项目到字典中
         let action = UIAlertAction(title: "添加", style: .default) { (action) in
             if alertTextFeild.text != "" {
-                self.listArray.append(alertTextFeild.text!)
-                self.defaults.set(self.listArray, forKey: "ListArray")
+                let newItem = ItemModel(text: alertTextFeild.text!, isDone: false)
+                self.listArray.append(newItem)
+                self.saveItems()
                 self.tableView.reloadData()
             }
         }
@@ -43,16 +48,27 @@ class ToDoListViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        if let items = defaults.array(forKey: "ListArray") as? [String] {
-            listArray = items
+        
+        loadItems()
+        if listArray.isEmpty {
+            for i in 0..<20 {
+                let model = ItemModel(text: "新项目\(i)", isDone: false)
+                listArray.append(model)
+            }
         }
+//
+//
+//        if let items = defaults.array(forKey: "ListArray") as? [ItemModel] {
+//            listArray = items
+//        }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         /// 获取可重用cell
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoListItemCell", for: indexPath)
         // 设置cell的text
-        cell.textLabel?.text = listArray[indexPath.row]
+        cell.textLabel?.text = listArray[indexPath.row].text
+        cell.accessoryType = listArray[indexPath.row].isDone ? .checkmark : .none
         // 返回cell
         return cell
     }
@@ -63,15 +79,37 @@ class ToDoListViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(indexPath.row)
         // 取消点击
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .none
+        if listArray[indexPath.row].isDone {
+            listArray[indexPath.row].isDone = false
         } else {
-            tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
+            listArray[indexPath.row].isDone = true
         }
+        // 保存模型
+        saveItems()
+        tableView.beginUpdates()
+        tableView.reloadRows(at: [indexPath], with: .fade)
+        tableView.endUpdates()
+    }
+    
+    func saveItems() {
+        let encoder = PropertyListEncoder()
+        let data = try? encoder.encode(listArray)
+        if dataFilePath != nil {
+            try? data?.write(to: dataFilePath!)
+        }
+    }
+    func loadItems() {
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decode = PropertyListDecoder()
+            listArray = (try? decode.decode([ItemModel].self, from: data)) ?? []
+        }
+    }
+    func removeAll() {
+        listArray.removeAll()
+        try? FileManager.default.removeItem(at: dataFilePath!)
+        viewDidLoad()
     }
 }
 
