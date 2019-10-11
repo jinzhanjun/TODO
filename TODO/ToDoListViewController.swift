@@ -11,14 +11,17 @@ import CoreData
 
 class ToDoListViewController: UITableViewController {
     
+    var selectedCategory: Category? {
+        didSet {
+            loadItems(predicate: nil, sortDescription: nil)
+        }
+    }
+    
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Item.plist")
     /// 定义CoreData数据上下文
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     /// 使用CoreData获取数据
-    lazy var listArray = Array<Item>()
-    @IBAction func clearAllItems(_ sender: UIBarButtonItem) {
-//        removeAll()
-    }
+    lazy var listArray = Array<Items>()
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
@@ -30,9 +33,10 @@ class ToDoListViewController: UITableViewController {
         /// 定义一个action，用来添加新项目到字典中
         let action = UIAlertAction(title: "添加", style: .default) { (action) in
             if alertTextFeild.text != "" {
-                let newItem = Item(context: self.context)
+                let newItem = Items(context: self.context)
                 newItem.title = alertTextFeild.text
                 newItem.isDone = false
+                newItem.parentCategory = self.selectedCategory
                 self.listArray.append(newItem)
                 self.saveItems()
             }
@@ -50,8 +54,6 @@ class ToDoListViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        loadItems()
         
         
 //        if listArray.isEmpty {
@@ -90,8 +92,8 @@ class ToDoListViewController: UITableViewController {
         } else {
             listArray[indexPath.row].isDone = true
         }
-        context.delete(listArray[indexPath.row])
-        listArray.remove(at: indexPath.row)
+//        context.delete(listArray[indexPath.row])
+//        listArray.remove(at: indexPath.row)
         // 保存模型
         saveItems()
 //        tableView.beginUpdates()
@@ -109,8 +111,18 @@ class ToDoListViewController: UITableViewController {
 //            try? data?.write(to: dataFilePath!)
 //        }
     }
-    func loadItems() {
-        let request: NSFetchRequest<Item> = Item.fetchRequest()
+    func loadItems(with request: NSFetchRequest<Items> = Items.fetchRequest(), predicate: NSPredicate?, sortDescription: NSSortDescriptor?) {
+        let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
+        if let predicate = predicate {
+            let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, predicate])
+            request.predicate = compoundPredicate
+        }else {
+            request.predicate = categoryPredicate
+        }
+        
+        if let sortDescription = sortDescription {
+            request.sortDescriptors = [sortDescription]
+        }
         try? listArray = context.fetch(request)
         tableView.reloadData()
 //        context.fetch([request])
@@ -128,18 +140,11 @@ class ToDoListViewController: UITableViewController {
 
 extension ToDoListViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        /// 定义Item的搜索请求
-        let request: NSFetchRequest<Item> = Item.fetchRequest()
-        /// 定义搜索预测内容
+        
         let predict = NSPredicate(format: "title CONTAINS[c] %@", searchBar.text!)
         /// 定义搜索结果排序方式
         let sortDescription = NSSortDescriptor(key: "title", ascending: true)
-        // 将搜索预测内容和搜索内容排序方式添加到搜索请求中
-        request.predicate = predict
-        request.sortDescriptors = [sortDescription]
-        
-        // 从context中获取请求的内容
-        try? listArray = context.fetch(request)
+        loadItems(predicate: predict, sortDescription: sortDescription)
         tableView.reloadData()
     }
     
@@ -148,7 +153,7 @@ extension ToDoListViewController: UISearchBarDelegate {
             DispatchQueue.main.async {
                 searchBar.resignFirstResponder()
             }
-            loadItems()
+            loadItems(predicate: nil, sortDescription: nil)
         }
     }
 }

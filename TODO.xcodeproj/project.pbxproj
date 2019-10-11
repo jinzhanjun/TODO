@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7E1D4B5B234E06AE00195E23 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1D4B5A234E06AE00195E23 /* CategoryTableViewController.swift */; };
 		7E35ADBF234B5B7A00049F06 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7E35ADBD234B5B7A00049F06 /* DataModel.xcdatamodeld */; };
 		7ECA8C97234AFD4E00A7D191 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECA8C96234AFD4E00A7D191 /* AppDelegate.swift */; };
 		7ECA8C99234AFD4E00A7D191 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECA8C98234AFD4E00A7D191 /* SceneDelegate.swift */; };
@@ -17,6 +18,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		7E1D4B5A234E06AE00195E23 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 		7E35ADBE234B5B7A00049F06 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		7ECA8C93234AFD4E00A7D191 /* TODO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TODO.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7ECA8C96234AFD4E00A7D191 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -62,6 +64,7 @@
 				7ECA8C98234AFD4E00A7D191 /* SceneDelegate.swift */,
 				7ECA8C9A234AFD4E00A7D191 /* ToDoListViewController.swift */,
 				7E35ADBD234B5B7A00049F06 /* DataModel.xcdatamodeld */,
+				7E1D4B5A234E06AE00195E23 /* CategoryTableViewController.swift */,
 				7ECA8C9C234AFD4E00A7D191 /* Main.storyboard */,
 				7ECA8C9F234AFD4F00A7D191 /* Assets.xcassets */,
 				7ECA8CA1234AFD4F00A7D191 /* LaunchScreen.storyboard */,
@@ -143,6 +146,7 @@
 			files = (
 				7ECA8C9B234AFD4E00A7D191 /* ToDoListViewController.swift in Sources */,
 				7E35ADBF234B5B7A00049F06 /* DataModel.xcdatamodeld in Sources */,
+				7E1D4B5B234E06AE00195E23 /* CategoryTableViewController.swift in Sources */,
 				7ECA8C97234AFD4E00A7D191 /* AppDelegate.swift in Sources */,
 				7ECA8C99234AFD4E00A7D191 /* SceneDelegate.swift in Sources */,
 			);
@@ -294,6 +298,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8AQ47Z9975;
 				INFOPLIST_FILE = TODO/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -313,6 +318,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8AQ47Z9975;
 				INFOPLIST_FILE = TODO/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
