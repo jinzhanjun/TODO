@@ -8,8 +8,18 @@
 
 import UIKit
 import CoreData
+import SwipeCellKit
+import ChameleonFramework
 
 class ToDoListViewController: UITableViewController {
+
+    
+    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Item.plist")
+    /// 定义CoreData数据上下文
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    /// 使用CoreData获取数据
+    lazy var listArray = Array<Items>()
+    
     
     var selectedCategory: Category? {
         didSet {
@@ -17,11 +27,7 @@ class ToDoListViewController: UITableViewController {
         }
     }
     
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Item.plist")
-    /// 定义CoreData数据上下文
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-    /// 使用CoreData获取数据
-    lazy var listArray = Array<Items>()
+    @IBOutlet weak var searchBar: UISearchBar!
     
     @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
         
@@ -52,9 +58,11 @@ class ToDoListViewController: UITableViewController {
     
     
 
+    /// 本类中所有UI控件全部加载完毕后，执行
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        tableView.separatorStyle = .none
+        tableView.rowHeight = 80.0
         
 //        if listArray.isEmpty {
 //            for i in 0..<20 {
@@ -69,9 +77,29 @@ class ToDoListViewController: UITableViewController {
 //        }
     }
     
+    /// 界面上所有可见部分都加载完毕后，执行
+    override func viewWillAppear(_ animated: Bool) {
+        
+        guard let navBar = navigationController?.navigationBar else{ fatalError("导航栏不存在！")}
+        
+        let navBarColor = UIColor(hexString: (selectedCategory?.backGroundColor)!)
+        navBar.backgroundColor = navBarColor
+        navBar.tintColor = ContrastColorOf(navBarColor!, returnFlat: true)
+        title = selectedCategory?.name
+        searchBar.barTintColor = navBarColor
+        
+        navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor!, returnFlat: true)]
+        
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         /// 获取可重用cell
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoListItemCell", for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoListItemCell", for: indexPath) as! SwipeTableViewCell
+        cell.delegate = self
+        if let color = UIColor(hexString: selectedCategory?.backGroundColor ?? "1D9BF6")?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(listArray.count)) {
+            cell.backgroundColor = color
+            cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
+        }
         // 设置cell的text
         cell.textLabel?.text = listArray[indexPath.row].title
         cell.accessoryType = listArray[indexPath.row].isDone ? .checkmark : .none
@@ -102,7 +130,11 @@ class ToDoListViewController: UITableViewController {
     }
     
     func saveItems() {
-        
+        do {
+            try context.save()
+        } catch {
+            fatalError("\(error)")
+        }
         try? context.save()
         tableView.reloadData()
 //        let encoder = PropertyListEncoder()
@@ -123,7 +155,12 @@ class ToDoListViewController: UITableViewController {
         if let sortDescription = sortDescription {
             request.sortDescriptors = [sortDescription]
         }
-        try? listArray = context.fetch(request)
+        
+        do {
+            try listArray = context.fetch(request)
+        } catch {
+            fatalError("\(error)")
+        }
         tableView.reloadData()
 //        context.fetch([request])
 //        if let data = try? Data(contentsOf: dataFilePath!) {
@@ -158,3 +195,27 @@ extension ToDoListViewController: UISearchBarDelegate {
     }
 }
 
+extension ToDoListViewController: SwipeTableViewCellDelegate {
+    func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> [SwipeAction]? {
+        guard orientation == .right else {return nil}
+        
+        let action = SwipeAction(style: .destructive, title: "删除") { (action, indexPath) in
+            
+            self.context.delete(self.listArray[indexPath.row])
+            self.listArray.remove(at: indexPath.row)
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+                self.tableView.reloadData()
+            }
+        }
+        
+        action.image = UIImage(named: "Trash-circle")
+        return [action]
+    }
+    
+    func tableView(_ tableView: UITableView, editActionsOptionsForRowAt indexPath: IndexPath, for orientation: SwipeActionsOrientation) -> SwipeOptions {
+        var options = SwipeTableOptions()
+        options.expansionStyle = .destructive
+        
+        return options
+    }
+}
