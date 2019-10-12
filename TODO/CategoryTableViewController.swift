@@ -123,12 +123,6 @@ extension CategoryTableViewController: SwipeTableViewCellDelegate {
         let deleteAction = SwipeAction(style: .destructive, title: "删除") { (action, indexPath) in
             self.context.delete(self.categoryArray[indexPath.row])
             self.categoryArray.remove(at: indexPath.row)
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-                self.tableView.reloadData()
-            }
-//            DispatchQueue.main.async {
-//                self.tableView.reloadData()
-//            }
         }
         
         

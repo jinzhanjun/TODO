@@ -203,9 +203,9 @@ extension ToDoListViewController: SwipeTableViewCellDelegate {
             
             self.context.delete(self.listArray[indexPath.row])
             self.listArray.remove(at: indexPath.row)
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
-                self.tableView.reloadData()
-            }
+//            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1) {
+//                self.tableView.reloadData()
+//            }
         }
         
         action.image = UIImage(named: "Trash-circle")
