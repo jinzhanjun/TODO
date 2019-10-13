@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="ItemsCell" rowHeight="80" id="xvQ-eJ-KtT" customClass="ToDoCellTableView" customModule="TODO">
+            <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="xvQ-eJ-KtT" id="ANy-mg-7Ui">
+                <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="B2Z-qo-Gmk">
+                        <rect key="frame" x="0.0" y="1" width="80" height="77.5"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="80" id="trn-rj-RbN"/>
+                            <constraint firstAttribute="height" constant="80" id="ve6-UC-DXJ"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dco-oL-QB6">
+                        <rect key="frame" x="89" y="0.0" width="295" height="80"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="80" id="4g3-1b-aOQ"/>
+                            <constraint firstAttribute="width" constant="295" id="j6O-nq-5r0"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="30"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="B2Z-qo-Gmk" firstAttribute="leading" secondItem="ANy-mg-7Ui" secondAttribute="leading" id="Bwv-qc-beg"/>
+                    <constraint firstItem="B2Z-qo-Gmk" firstAttribute="top" secondItem="ANy-mg-7Ui" secondAttribute="top" id="DNx-Tx-IEz"/>
+                    <constraint firstItem="Dco-oL-QB6" firstAttribute="leading" secondItem="B2Z-qo-Gmk" secondAttribute="trailing" constant="9" id="XqO-6d-KfI"/>
+                    <constraint firstItem="Dco-oL-QB6" firstAttribute="top" secondItem="B2Z-qo-Gmk" secondAttribute="top" id="fr0-1U-aCV"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="itemTextLabel" destination="Dco-oL-QB6" id="FnF-qb-4hK"/>
+            </connections>
+            <point key="canvasLocation" x="-274" y="-40"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="photo.fill" catalog="system" width="64" height="46"/>
+    </resources>
+</document>

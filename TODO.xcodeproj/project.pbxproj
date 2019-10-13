@@ -3,13 +3,15 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		3B86E3E26D104D42FE10483A /* Pods_TODO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14F4973A6654ADEFE7273832 /* Pods_TODO.framework */; };
 		7E1D4B5B234E06AE00195E23 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1D4B5A234E06AE00195E23 /* CategoryTableViewController.swift */; };
 		7E35ADBF234B5B7A00049F06 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7E35ADBD234B5B7A00049F06 /* DataModel.xcdatamodeld */; };
+		7E4650F923534F4800B07CF5 /* ToDoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E4650F823534F4800B07CF5 /* ToDoCell.xib */; };
+		7E4650FB23535AB300B07CF5 /* ToDoCellTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E4650FA23535AB300B07CF5 /* ToDoCellTableView.swift */; };
 		7ECA8C97234AFD4E00A7D191 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECA8C96234AFD4E00A7D191 /* AppDelegate.swift */; };
 		7ECA8C99234AFD4E00A7D191 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECA8C98234AFD4E00A7D191 /* SceneDelegate.swift */; };
 		7ECA8C9B234AFD4E00A7D191 /* ToDoListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ECA8C9A234AFD4E00A7D191 /* ToDoListViewController.swift */; };
@@ -22,6 +24,8 @@
 		14F4973A6654ADEFE7273832 /* Pods_TODO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TODO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E1D4B5A234E06AE00195E23 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 		7E35ADBE234B5B7A00049F06 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
+		7E4650F823534F4800B07CF5 /* ToDoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToDoCell.xib; sourceTree = "<group>"; };
+		7E4650FA23535AB300B07CF5 /* ToDoCellTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToDoCellTableView.swift; sourceTree = "<group>"; };
 		7ECA8C93234AFD4E00A7D191 /* TODO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TODO.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7ECA8C96234AFD4E00A7D191 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7ECA8C98234AFD4E00A7D191 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -52,7 +56,6 @@
 				B7E1347AD4577956B3B00F34 /* Pods-TODO.debug.xcconfig */,
 				FFDFA28F994608669F4065C5 /* Pods-TODO.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -91,6 +94,8 @@
 				7E35ADBD234B5B7A00049F06 /* DataModel.xcdatamodeld */,
 				7E1D4B5A234E06AE00195E23 /* CategoryTableViewController.swift */,
 				7ECA8C9C234AFD4E00A7D191 /* Main.storyboard */,
+				7E4650F823534F4800B07CF5 /* ToDoCell.xib */,
+				7E4650FA23535AB300B07CF5 /* ToDoCellTableView.swift */,
 				7ECA8C9F234AFD4F00A7D191 /* Assets.xcassets */,
 				7ECA8CA1234AFD4F00A7D191 /* LaunchScreen.storyboard */,
 				7ECA8CA4234AFD4F00A7D191 /* Info.plist */,
@@ -161,6 +166,7 @@
 				7ECA8CA3234AFD4F00A7D191 /* LaunchScreen.storyboard in Resources */,
 				7ECA8CA0234AFD4F00A7D191 /* Assets.xcassets in Resources */,
 				7ECA8C9E234AFD4E00A7D191 /* Main.storyboard in Resources */,
+				7E4650F923534F4800B07CF5 /* ToDoCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,6 +223,7 @@
 				7E35ADBF234B5B7A00049F06 /* DataModel.xcdatamodeld in Sources */,
 				7E1D4B5B234E06AE00195E23 /* CategoryTableViewController.swift in Sources */,
 				7ECA8C97234AFD4E00A7D191 /* AppDelegate.swift in Sources */,
+				7E4650FB23535AB300B07CF5 /* ToDoCellTableView.swift in Sources */,
 				7ECA8C99234AFD4E00A7D191 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

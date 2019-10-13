@@ -61,9 +61,11 @@ class ToDoListViewController: UITableViewController {
     /// 本类中所有UI控件全部加载完毕后，执行
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.contentOffset.y = -1000
         tableView.separatorStyle = .none
         tableView.rowHeight = 80.0
-        
+        /// 注册单元格
+        tableView.register(UINib(nibName: "ToDoCell", bundle: nil), forCellReuseIdentifier: "ItemsCell")
 //        if listArray.isEmpty {
 //            for i in 0..<20 {
 //                let model = ItemModel(text: "新项目\(i)", isDone: false)
@@ -94,15 +96,16 @@ class ToDoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         /// 获取可重用cell
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoListItemCell", for: indexPath) as! SwipeTableViewCell
-        cell.delegate = self
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemsCell", for: indexPath) as! ToDoCellTableView
+//        cell.delegate = self
         if let color = UIColor(hexString: selectedCategory?.backGroundColor ?? "1D9BF6")?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(listArray.count)) {
             cell.backgroundColor = color
             cell.textLabel?.textColor = ContrastColorOf(color, returnFlat: true)
         }
         // 设置cell的text
-        cell.textLabel?.text = listArray[indexPath.row].title
-        cell.accessoryType = listArray[indexPath.row].isDone ? .checkmark : .none
+        cell.itemTextLabel?.text = listArray[indexPath.row].title
+//        cell.textLabel?.text = listArray[indexPath.row].title
+//        cell.accessoryType = listArray[indexPath.row].isDone ? .checkmark : .none
         // 返回cell
         return cell
     }

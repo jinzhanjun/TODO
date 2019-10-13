@@ -21,6 +21,7 @@ class CategoryTableViewController: UITableViewController {
         tableView.rowHeight = 80.0
         tableView.separatorStyle = .none
         loadCategories()
+//        navigationController?.navigationBar.isHidden = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
