@@ -20,6 +20,7 @@ class ToDoListViewController: UITableViewController {
     /// 使用CoreData获取数据
     lazy var listArray = Array<Items>()
     
+    var dragTexgLabel: UILabel?
     
     var selectedCategory: Category? {
         didSet {
@@ -61,22 +62,18 @@ class ToDoListViewController: UITableViewController {
     /// 本类中所有UI控件全部加载完毕后，执行
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.contentOffset.y = -1000
         tableView.separatorStyle = .none
-        tableView.rowHeight = 80.0
+        tableView.rowHeight = 150
+        tableView.estimatedRowHeight = 150
+        setUpUI()
         /// 注册单元格
         tableView.register(UINib(nibName: "ToDoCell", bundle: nil), forCellReuseIdentifier: "ItemsCell")
-//        if listArray.isEmpty {
-//            for i in 0..<20 {
-//                let model = ItemModel(text: "新项目\(i)", isDone: false)
-//                listArray.append(model)
-//            }
-//        }
-//
-//
-//        if let items = defaults.array(forKey: "ListArray") as? [ItemModel] {
-//            listArray = items
-//        }
+    }
+    
+    func setUpUI() {
+        dragTexgLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 1, height: 40))
+        dragTexgLabel?.textColor = UIColor.darkGray
+        tableView.addSubview(dragTexgLabel!)
     }
     
     /// 界面上所有可见部分都加载完毕后，执行
@@ -90,13 +87,13 @@ class ToDoListViewController: UITableViewController {
         title = selectedCategory?.name
         searchBar.barTintColor = navBarColor
         
-        navBar.largeTitleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor!, returnFlat: true)]
+        navBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: ContrastColorOf(navBarColor!, returnFlat: true)]
         
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         /// 获取可重用cell
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemsCell", for: indexPath) as! ToDoCellTableView
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemsCell", for: indexPath) as! ToDoTableViewCell
 //        cell.delegate = self
         if let color = UIColor(hexString: selectedCategory?.backGroundColor ?? "1D9BF6")?.darken(byPercentage: CGFloat(indexPath.row) / CGFloat(listArray.count)) {
             cell.backgroundColor = color
@@ -165,17 +162,22 @@ class ToDoListViewController: UITableViewController {
             fatalError("\(error)")
         }
         tableView.reloadData()
-//        context.fetch([request])
-//        if let data = try? Data(contentsOf: dataFilePath!) {
-//            let decode = PropertyListDecoder()
-//            listArray = (try? decode.decode([ItemModel].self, from: data)) ?? []
-//        }
     }
-//    func removeAll() {
-//        listArray.removeAll()
-//        try? FileManager.default.removeItem(at: dataFilePath!)
-//        viewDidLoad()
-//    }
+    override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+
+        if listArray.count == 0 {
+            dragTexgLabel?.text = "写点什么吧"
+        } else {
+            dragTexgLabel?.text = "\(listArray.count)篇笔记"
+        }
+
+        dragTexgLabel?.sizeToFit()
+        dragTexgLabel?.center = CGPoint(x: view.center.x, y: -35)
+    }
+    
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print(scrollView.contentOffset.y)
+    }
 }
 
 extension ToDoListViewController: UISearchBarDelegate {
