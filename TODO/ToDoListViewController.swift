@@ -46,6 +46,10 @@ class ToDoListViewController: UITableViewController {
                 newItem.parentCategory = self.selectedCategory
                 self.listArray.append(newItem)
                 self.saveItems()
+                
+                self.dragTexgLabel?.text = "\(self.listArray.count)篇笔记"
+                self.dragTexgLabel?.sizeToFit()
+                self.dragTexgLabel?.center = CGPoint(x: self.view.center.x, y: -35)
             }
         }
         
@@ -57,6 +61,9 @@ class ToDoListViewController: UITableViewController {
         present(alert, animated: true, completion: nil)
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .darkContent
+    }
     
 
     /// 本类中所有UI控件全部加载完毕后，执行
@@ -66,13 +73,27 @@ class ToDoListViewController: UITableViewController {
         tableView.rowHeight = 150
         tableView.estimatedRowHeight = 150
         setUpUI()
+//        setStatusBarStyle(.darkContent)
+        
+//        setStatusBarBackgroundColor(color: UIColor.white)
         /// 注册单元格
         tableView.register(UINib(nibName: "ToDoCell", bundle: nil), forCellReuseIdentifier: "ItemsCell")
+    }
+    
+    func setStatusBarBackgroundColor(color: UIColor) {
+//        if let statusBarWindow: UIView = UIStatusBarManager
     }
     
     func setUpUI() {
         dragTexgLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 1, height: 40))
         dragTexgLabel?.textColor = UIColor.darkGray
+        if listArray.count == 0 {
+            dragTexgLabel?.text = "写点什么吧"
+        } else {
+            dragTexgLabel?.text = "\(listArray.count)篇笔记"
+        }
+        dragTexgLabel?.sizeToFit()
+        dragTexgLabel?.center = CGPoint(x: view.center.x, y: -35)
         tableView.addSubview(dragTexgLabel!)
     }
     
@@ -120,13 +141,17 @@ class ToDoListViewController: UITableViewController {
         } else {
             listArray[indexPath.row].isDone = true
         }
-//        context.delete(listArray[indexPath.row])
-//        listArray.remove(at: indexPath.row)
-        // 保存模型
         saveItems()
-//        tableView.beginUpdates()
-//        tableView.reloadRows(at: [indexPath], with: .fade)
-//        tableView.endUpdates()
+        
+        performSegue(withIdentifier: "ShowNote", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "ShowNote" {
+            if let destinationVC = segue.destination as? NoteViewController {
+                
+            }
+        }
     }
     
     func saveItems() {
@@ -137,11 +162,6 @@ class ToDoListViewController: UITableViewController {
         }
         try? context.save()
         tableView.reloadData()
-//        let encoder = PropertyListEncoder()
-//        let data = try? encoder.encode(listArray)
-//        if dataFilePath != nil {
-//            try? data?.write(to: dataFilePath!)
-//        }
     }
     func loadItems(with request: NSFetchRequest<Items> = Items.fetchRequest(), predicate: NSPredicate?, sortDescription: NSSortDescriptor?) {
         let categoryPredicate = NSPredicate(format: "parentCategory.name MATCHES %@", selectedCategory!.name!)
@@ -165,18 +185,11 @@ class ToDoListViewController: UITableViewController {
     }
     override func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
 
-        if listArray.count == 0 {
-            dragTexgLabel?.text = "写点什么吧"
-        } else {
-            dragTexgLabel?.text = "\(listArray.count)篇笔记"
-        }
-
-        dragTexgLabel?.sizeToFit()
-        dragTexgLabel?.center = CGPoint(x: view.center.x, y: -35)
     }
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print(scrollView.contentOffset.y)
+//        navigationController?.navigationBar.
     }
 }
 
