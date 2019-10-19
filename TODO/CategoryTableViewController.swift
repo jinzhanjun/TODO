@@ -103,17 +103,30 @@ class CategoryTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "GoToItems", sender: self)
+//        performSegue(withIdentifier: "GoToItems", sender: self)
+        performSegue(withIdentifier: "Test", sender: self)
         tableView.deselectRow(at: indexPath, animated: true)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "GoToItems",
-            let destinationVC = segue.destination as? ToDoListViewController,
+        if segue.identifier == "Text",
+            let destinationVC = segue.destination as? ToDoItemListViewController,
             let indexPath = tableView.indexPathForSelectedRow
-        {
-            destinationVC.selectedCategory = categoryArray[indexPath.row]
+            {
+                destinationVC.parentCategroy = categoryArray[indexPath.row]
         }
+        
+        
+//        if segue.identifier == "GoToItems",
+//            let destinationVC = segue.destination as? ToDoListViewController,
+//            let indexPath = tableView.indexPathForSelectedRow
+//        {
+//            destinationVC.selectedCategory = categoryArray[indexPath.row]
+//        }
+//        else if segue.identifier == "Test",
+//            let destinationVC = segue.destination as? ToDoItemListViewController {
+//
+//        }
     }
 }
 
