@@ -12,7 +12,8 @@ import SwipeCellKit
 import ChameleonFramework
 
 class ToDoListViewController: UITableViewController {
-
+    
+    var creatNewNoteBtn: UIButton?
     
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Item.plist")
     /// 定义CoreData数据上下文
@@ -73,11 +74,20 @@ class ToDoListViewController: UITableViewController {
         tableView.rowHeight = 150
         tableView.estimatedRowHeight = 150
         setUpUI()
+//        performSelector(onMainThread: #selector(setNewNoteWindow), with: nil, waitUntilDone: true)
+        setNewNoteWindow()
 //        setStatusBarStyle(.darkContent)
         
 //        setStatusBarBackgroundColor(color: UIColor.white)
         /// 注册单元格
         tableView.register(UINib(nibName: "ToDoCell", bundle: nil), forCellReuseIdentifier: "ItemsCell")
+    }
+    
+    @objc func setNewNoteWindow() {
+        creatNewNoteBtn = UIButton(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
+        creatNewNoteBtn?.backgroundColor = UIColor.red
+        
+        view.addSubview(creatNewNoteBtn!)
     }
     
     func setStatusBarBackgroundColor(color: UIColor) {

@@ -43,7 +43,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WPz-f8-fmD" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-17" y="5"/>
+            <point key="canvasLocation" x="-54" y="5"/>
         </scene>
         <!--事项-->
         <scene sceneID="RxW-lx-ZJo">
@@ -80,7 +80,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Ak-Co-eYG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="719" y="5"/>
+            <point key="canvasLocation" x="698" y="5"/>
         </scene>
         <!--Note View Controller-->
         <scene sceneID="Wh9-9m-GQ7">
@@ -111,12 +111,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oo1-cM-bJA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1557.5999999999999" y="4.9475262368815596"/>
+            <point key="canvasLocation" x="1473" y="5"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="9Sn-rl-mE8">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" hidesBarsOnSwipe="YES" id="CHt-K8-AC6" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="CHt-K8-AC6" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="ENy-y6-Zq1">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>

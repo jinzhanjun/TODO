@@ -43,7 +43,7 @@
             <connections>
                 <outlet property="itemTextLabel" destination="Dco-oL-QB6" id="FnF-qb-4hK"/>
             </connections>
-            <point key="canvasLocation" x="-202" y="-78"/>
+            <point key="canvasLocation" x="-63" y="-52"/>
         </tableViewCell>
     </objects>
     <resources>
