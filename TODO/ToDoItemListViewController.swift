@@ -14,9 +14,21 @@ class ToDoItemListViewController: UIViewController, UITableViewDelegate, UITable
     var tableView: UITableView?
     var creatNewNoteBtn: UIButton?
     var search: UISearchBar?
-    var parentCategory: Category? {
+    var noteCountLabel: UILabel?
+    var noteCount: Int? {
         didSet {
-            
+            if noteCount == 0 {
+                noteCountLabel?.text = "写点什么吧"
+            }else {
+                noteCountLabel?.text = "\(noteCount ?? 0)篇笔记"
+            }
+            noteCountLabel?.sizeToFit()
+            noteCountLabel?.center.x = UIScreen.main.bounds.width / 2
+        }
+    }
+    var selectedCategory: Category? {
+        didSet {
+            loadItems(predict: nil)
         }
     }
     
@@ -50,11 +62,19 @@ class ToDoItemListViewController: UIViewController, UITableViewDelegate, UITable
         return cell
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "CreatNote", sender: indexPath)
+    }
+    
     func setupUI() {
         tableView = UITableView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
         creatNewNoteBtn = UIButton(frame: CGRect(x: UIScreen.main.bounds.width - 64, y: UIScreen.main.bounds.height - 64, width: 44, height: 44))
         creatNewNoteBtn?.addTarget(self, action: #selector(creatNewNoteBtnPressed), for: .touchUpInside)
         search = UISearchBar(frame: CGRect(x: 0, y: 64, width: UIScreen.main.bounds.width, height: 44))
+        noteCountLabel = UILabel(frame: CGRect(x: 0, y: -50, width: 100, height: 44))
+        noteCountLabel?.textColor = UIColor.darkGray
+        tableView?.addSubview(noteCountLabel!)
+        noteCount = noteItemsArray.count
         tableView?.contentInsetAdjustmentBehavior = .never
         tableView?.contentInset.top = 108
         search?.backgroundColor = UIColor.gray
@@ -65,13 +85,27 @@ class ToDoItemListViewController: UIViewController, UITableViewDelegate, UITable
     }
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        
+        let predict = NSPredicate(format: "title CONTAINS[C]%@", searchText)
+        loadItems(predict: predict)
+    }
+    
+    func loadItems(with request: NSFetchRequest<Items> = Items.fetchRequest(), predict: NSPredicate?) {
+        let compredict = NSPredicate(format: "parentCategory.name CONTAINS[C]%@", selectedCategory!.name!)
+        if predict != nil {
+            let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: [compredict, predict!])
+            request.predicate = compoundPredicate
+        } else {
+            request.predicate = compredict
+        }
+        let sortDescription = NSSortDescriptor(key: "title", ascending: true)
+        request.sortDescriptors = [sortDescription]
+        try? noteItemsArray = context?.fetch(request) ?? []
+        tableView?.reloadData()
     }
     
     func fetchNotes() {
         let request: NSFetchRequest<Items> = Items.fetchRequest()
-        let predicate = NSPredicate(format: "title CONTAINS[C]%@", )
-        let fetch = try? context?.fetch(request)
+        try? noteItemsArray = (context?.fetch(request)) ?? []
     }
     
     @objc func creatNewNoteBtnPressed() {
@@ -82,14 +116,25 @@ class ToDoItemListViewController: UIViewController, UITableViewDelegate, UITable
         if segue.identifier == "CreatNote" {
             guard let destinationVC = segue.destination as? NoteViewController else {return}
             
-            destinationVC.block = {(noteText) in
-                let item = Items(context: self.context!)
-                item.title = noteText
-                item.isDone = false
-                item.parentCategory = self.parentCategroy
-                self.noteItemsArray.append(item)
-                DispatchQueue.main.async {
-                    self.saveNotes()
+            if let sender = sender as? IndexPath {
+                destinationVC.noteTitle = noteItemsArray[sender.row].title
+                destinationVC.block = {(noteText) in
+                    self.noteItemsArray[sender.row].title = noteText
+                    DispatchQueue.main.async {
+                        self.saveNotes()
+                    }
+                }
+            } else {
+                destinationVC.block = {(noteText) in
+                    let item = Items(context: self.context!)
+                    item.title = noteText
+                    item.isDone = false
+                    item.parentCategory = self.selectedCategory
+                    self.noteItemsArray.append(item)
+                    self.noteCount = self.noteItemsArray.count
+                    DispatchQueue.main.async {
+                        self.saveNotes()
+                    }
                 }
             }
         }

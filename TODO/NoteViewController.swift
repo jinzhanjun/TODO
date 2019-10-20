@@ -10,6 +10,7 @@ import UIKit
 
 class NoteViewController: UIViewController {
 
+    var noteTitle: String?
     var block: ((String) -> Void)?
     @IBOutlet weak var noteText: UITextView!
     
@@ -21,5 +22,7 @@ class NoteViewController: UIViewController {
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        noteText.text = noteTitle ?? ""
     }
 }

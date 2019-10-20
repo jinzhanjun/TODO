@@ -109,11 +109,11 @@ class CategoryTableViewController: UITableViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Text",
+        if segue.identifier == "Test",
             let destinationVC = segue.destination as? ToDoItemListViewController,
             let indexPath = tableView.indexPathForSelectedRow
             {
-                destinationVC.parentCategroy = categoryArray[indexPath.row]
+                destinationVC.selectedCategory = categoryArray[indexPath.row]
         }
         
         
