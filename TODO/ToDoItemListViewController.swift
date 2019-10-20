@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import SwipeCellKit
 
 class ToDoItemListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
     
@@ -130,7 +131,7 @@ class ToDoItemListViewController: UIViewController, UITableViewDelegate, UITable
                     item.title = noteText
                     item.isDone = false
                     item.parentCategory = self.selectedCategory
-                    self.noteItemsArray.append(item)
+                    self.noteItemsArray.insert(item, at: 0)
                     self.noteCount = self.noteItemsArray.count
                     DispatchQueue.main.async {
                         self.saveNotes()

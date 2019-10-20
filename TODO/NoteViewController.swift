@@ -13,16 +13,14 @@ class NoteViewController: UIViewController {
     var noteTitle: String?
     var block: ((String) -> Void)?
     @IBOutlet weak var noteText: UITextView!
-    
-    @IBAction func saveNotePressed(_ sender: UIBarButtonItem) {
-        if noteText.text.count != 0 {
-            block?(noteText.text)
-        }
-        navigationController?.popViewController(animated: true)
-    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
         noteText.text = noteTitle ?? ""
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        block?((noteText.text.count == 0) ? "思考一下，再写点东西" : noteText.text)
     }
 }

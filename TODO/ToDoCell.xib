@@ -15,38 +15,19 @@
                 <rect key="frame" x="0.0" y="0.0" width="375" height="150"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo.fill" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="B2Z-qo-Gmk">
-                        <rect key="frame" x="0.0" y="1" width="80" height="77.5"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="80" id="trn-rj-RbN"/>
-                            <constraint firstAttribute="height" constant="80" id="ve6-UC-DXJ"/>
-                        </constraints>
-                    </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dco-oL-QB6">
-                        <rect key="frame" x="89" y="0.0" width="295" height="80"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="80" id="4g3-1b-aOQ"/>
-                            <constraint firstAttribute="width" constant="295" id="j6O-nq-5r0"/>
-                        </constraints>
-                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="30"/>
+                    <label opaque="NO" userInteractionEnabled="NO" tag="1" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dco-oL-QB6">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <fontDescription key="fontDescription" name=".AppleSystemUIFont" family=".AppleSystemUIFont" pointSize="16"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
-                <constraints>
-                    <constraint firstItem="B2Z-qo-Gmk" firstAttribute="leading" secondItem="ANy-mg-7Ui" secondAttribute="leading" id="Bwv-qc-beg"/>
-                    <constraint firstItem="B2Z-qo-Gmk" firstAttribute="top" secondItem="ANy-mg-7Ui" secondAttribute="top" id="DNx-Tx-IEz"/>
-                    <constraint firstItem="Dco-oL-QB6" firstAttribute="leading" secondItem="B2Z-qo-Gmk" secondAttribute="trailing" constant="9" id="XqO-6d-KfI"/>
-                    <constraint firstItem="Dco-oL-QB6" firstAttribute="top" secondItem="B2Z-qo-Gmk" secondAttribute="top" id="fr0-1U-aCV"/>
-                </constraints>
             </tableViewCellContentView>
             <connections>
                 <outlet property="itemTextLabel" destination="Dco-oL-QB6" id="FnF-qb-4hK"/>
             </connections>
-            <point key="canvasLocation" x="-63" y="-52"/>
+            <point key="canvasLocation" x="10" y="-39"/>
         </tableViewCell>
     </objects>
-    <resources>
-        <image name="photo.fill" catalog="system" width="64" height="46"/>
-    </resources>
 </document>
