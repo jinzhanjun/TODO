@@ -145,10 +145,10 @@
             </objects>
             <point key="canvasLocation" x="-12" y="725"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Menu Nav Controller-->
         <scene sceneID="6c0-ej-M9o">
             <objects>
-                <navigationController id="Z4E-eJ-eiP" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="MenuNavController" id="Z4E-eJ-eiP" customClass="MenuNavController" customModule="TODO" customModuleProvider="target" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="bSJ-cd-NdT">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -164,7 +164,7 @@
         <!--Main Nav Controller-->
         <scene sceneID="9Sn-rl-mE8">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="CHt-K8-AC6" customClass="MainNavController" customModule="TODO" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="MainNavController" automaticallyAdjustsScrollViewInsets="NO" id="CHt-K8-AC6" customClass="MainNavController" customModule="TODO" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="ENy-y6-Zq1">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
