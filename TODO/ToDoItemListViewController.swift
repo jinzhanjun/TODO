@@ -60,6 +60,7 @@ class ToDoItemListViewController: UIViewController, UITableViewDelegate, UITable
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ItemsCell", for: indexPath) as! ToDoTableViewCell
         cell.itemTextLabel.text = noteItemsArray[indexPath.row].title
+        cell.itemTextLabel.textColor = noteItemsArray[indexPath.row].textIsNil ? UIColor.darkGray : UIColor.black
         return cell
     }
     
@@ -118,9 +119,10 @@ class ToDoItemListViewController: UIViewController, UITableViewDelegate, UITable
             guard let destinationVC = segue.destination as? NoteViewController else {return}
             
             if let sender = sender as? IndexPath {
-                destinationVC.noteTitle = noteItemsArray[sender.row].title
+                destinationVC.noteTitle = noteItemsArray[sender.row].textIsNil ? "" : noteItemsArray[sender.row].title
                 destinationVC.block = {(noteText) in
-                    self.noteItemsArray[sender.row].title = noteText
+                    self.noteItemsArray[sender.row].textIsNil = (noteText.count == 0) ? true : false
+                    self.noteItemsArray[sender.row].title = self.noteItemsArray[sender.row].textIsNil ? "思考一下，再写点什么" : noteText
                     DispatchQueue.main.async {
                         self.saveNotes()
                     }
@@ -131,6 +133,8 @@ class ToDoItemListViewController: UIViewController, UITableViewDelegate, UITable
                     item.title = noteText
                     item.isDone = false
                     item.parentCategory = self.selectedCategory
+                    item.textIsNil = (noteText.count == 0) ? true : false
+                    item.title = item.textIsNil ? "思考一下，再写点什么" : noteText
                     self.noteItemsArray.insert(item, at: 0)
                     self.noteCount = self.noteItemsArray.count
                     DispatchQueue.main.async {

@@ -21,6 +21,6 @@ class NoteViewController: UIViewController {
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        block?((noteText.text.count == 0) ? "思考一下，再写点东西" : noteText.text)
+        block?(noteText.text)
     }
 }

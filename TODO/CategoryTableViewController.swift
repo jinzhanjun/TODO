@@ -115,18 +115,6 @@ class CategoryTableViewController: UITableViewController {
             {
                 destinationVC.selectedCategory = categoryArray[indexPath.row]
         }
-        
-        
-//        if segue.identifier == "GoToItems",
-//            let destinationVC = segue.destination as? ToDoListViewController,
-//            let indexPath = tableView.indexPathForSelectedRow
-//        {
-//            destinationVC.selectedCategory = categoryArray[indexPath.row]
-//        }
-//        else if segue.identifier == "Test",
-//            let destinationVC = segue.destination as? ToDoItemListViewController {
-//
-//        }
     }
 }
 
