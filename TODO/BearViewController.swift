@@ -9,13 +9,15 @@
 import UIKit
 import CoreData
 
-class BearViewController: UIViewController {
+class BearViewController: UIViewController, UINavigationControllerDelegate {
     
     var mainNavController: MainNavController?
     var menuNavController: MenuNavController?
     
     /// 单击手势
     var tapGestureRecognizer: UITapGestureRecognizer?
+    /// 滑动手势
+    var panGestureRecognizer: UIPanGestureRecognizer?
     
     enum MenuState {
         // 未显示（收起）
@@ -47,15 +49,18 @@ class BearViewController: UIViewController {
         addChild(mainNavController!)
         mainNavController?.didMove(toParent: self)
         
+        // 设置代理
+        mainNavController?.delegate = self
         /// 添加拖动手势
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
-        mainNavController?.view.addGestureRecognizer(panGestureRecognizer)
+        panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
+        mainNavController?.view.addGestureRecognizer(panGestureRecognizer!)
     }
     
     // 拖动手势响应
     @objc func handlePanGesture(_ recognizer: UIPanGestureRecognizer) {
-        
-        guard let originX = recognizer.view?.frame.origin.x
+        /// 定义是否是在main界面滑动
+        let isOnMain = recognizer.view == mainNavController?.view
+        guard let originX = isOnMain ? recognizer.view?.frame.origin.x : mainNavController?.view.frame.origin.x
             else {return}
         switch recognizer.state {
         // 刚刚开始滑动
@@ -70,38 +75,20 @@ class BearViewController: UIViewController {
             }
         // 如果是正在滑动，则偏移主视图的坐标实现跟随手指位置移动
         case .changed:
-            // 如果是在mainNav页面中滑动
-            if recognizer.view == mainNavController?.view {
-                let positionX = originX + recognizer.translation(in: view).x
-                // 页面滑到最左侧的话就不许继续往左移动
-                mainNavController?.view?.frame.origin.x = positionX < 0 ? 0 : positionX
-                recognizer.setTranslation(.zero, in: view)
-            }
-            // 如果是在菜单栏中滑动
-            else {
-                let positionX = mainNavController?.view.frame.origin.x
-                mainNavController?.view.frame.origin.x = positionX! + recognizer.translation(in: view).x
-                recognizer.setTranslation(.zero, in: view)
-            }
-
-            
+            let positionX = originX + recognizer.translation(in: view).x
+            // 页面滑到最左侧的话就不许继续往左移动
+            mainNavController?.view?.frame.origin.x = positionX < 0 ? 0 : positionX
+            recognizer.setTranslation(.zero, in: view)
         case .ended:
-            // 如果是在mainNav界面中滑动
-            if recognizer.view == mainNavController?.view {
-                // 根据页面滑动是否过半，判断后面是自动展开还是收缩
-                let hasMovedhanHalfway = { () -> Bool in
-                    if (recognizer.view?.center.x)! > self.view.bounds.size.width || recognizer.velocity(in: self.view).x > CGFloat(1000) {
-                        return true
-                    }
-                    return false
+            // 根据页面滑动是否过半，判断后面是自动展开还是收缩
+            let hasMovedhanHalfway = { () -> Bool in
+                if (recognizer.view?.center.x)! > self.view.bounds.size.width || recognizer.velocity(in: self.view).x > CGFloat(1000) {
+                    return true
                 }
-                // 自动展开方法
-                animateMainView(shouldExpand: hasMovedhanHalfway())
+                return false
             }
-            // 如果是在菜单栏中滑动
-            else{
-                animateMainView(shouldExpand: recognizer.velocity(in: view).x > 0)
-            }
+            // 自动展开方法
+            isOnMain ? animateMainView(shouldExpand: hasMovedhanHalfway()) : animateMainView(shouldExpand: recognizer.velocity(in: view).x > 0)
         default:
             break
         }
@@ -134,16 +121,13 @@ class BearViewController: UIViewController {
             // 更新当前状态
             currentState = .Expanded
             // 动画
-            //            animateMainViewXposition(targetPosition: mainNavController!.view.frame.width - menuNavViewExpandedOffset)
-            
             animateMainViewXposition(targetPosition: mainNavController!.view.frame.width - menuNavViewExpandedOffset) { (isComplete) in
                 /// 添加单击手势
                 self.tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.handleTapGesture))
                 self.mainNavController?.view.addGestureRecognizer(self.tapGestureRecognizer!)
-                // 设置主页面不可滚动
-                (self.mainNavController?.children[0] as? CategoryTableViewController)?.tableView.isScrollEnabled = false
-                
-                /// 添加拖动手势
+                // 设置mainNav不可滚动
+                (self.mainNavController?.children.first as? CategoryTableViewController)?.tableView.isScrollEnabled = false
+                /// 菜单栏添加拖动手势
                 let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.handlePanGesture(_:)))
                 self.menuNavController?.view.addGestureRecognizer(panGestureRecognizer)
             }
@@ -159,8 +143,8 @@ class BearViewController: UIViewController {
                 self.menuNavController?.view.removeFromSuperview()
                 // 释放内存
                 self.menuNavController = nil
-                // 设置主页面可以交互
-                (self.mainNavController?.children[0] as? CategoryTableViewController)?.tableView.isScrollEnabled = true
+                // 设置主页面可以滚动
+                (self.mainNavController?.children.first as? CategoryTableViewController)?.tableView.isScrollEnabled = true
                 // 移除单击手势
                 if self.tapGestureRecognizer != nil {
                     self.mainNavController?.view.removeGestureRecognizer(self.tapGestureRecognizer!)
@@ -172,13 +156,13 @@ class BearViewController: UIViewController {
     // 主页移动动画
     func animateMainViewXposition(targetPosition: CGFloat, completion: ((Bool) -> Void)? = nil) {
         // usingSpringWithDamping: 1.0 表示没有弹簧震动动画
-        UIView.animate(withDuration: 0.5,
+        UIView.animate(withDuration: 0.8,
                        delay: 0,
                        usingSpringWithDamping: 0.85,
                        initialSpringVelocity: 0,
                        options: .curveEaseInOut,
                        animations: {
-            self.mainNavController?.view.frame.origin.x = targetPosition
+                        self.mainNavController?.view.frame.origin.x = targetPosition
         }, completion: completion)
     }
     
@@ -186,9 +170,23 @@ class BearViewController: UIViewController {
     func showShadowForMainViewController(shouldShowShadow: Bool) {
         
         if shouldShowShadow {
-            mainNavController?.view.layer.shadowOpacity = 2
+            mainNavController?.view.layer.shadowOpacity = 0.8
+            mainNavController?.view.layer.shadowColor = UIColor.darkGray.cgColor
+            mainNavController?.view.layer.shadowRadius = 0.6
+            mainNavController?.view.layer.shadowOffset = CGSize(width: 2, height: 2)
         } else {
             mainNavController?.view.layer.shadowOpacity = 0.0
+        }
+    }
+    
+    // 移除、添加手势
+    func navigationController(_ navigationController: UINavigationController, didShow viewController: UIViewController, animated: Bool) {
+        if let _ = viewController as? CategoryTableViewController {
+            mainNavController?.view.addGestureRecognizer(panGestureRecognizer!)
+            print("添加移动手势")
+        } else {
+            mainNavController?.view.removeGestureRecognizer(panGestureRecognizer!)
+            print("移除移动手势")
         }
     }
 }

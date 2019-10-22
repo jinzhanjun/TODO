@@ -16,7 +16,6 @@ class NoteViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         noteText.text = noteTitle ?? ""
     }
     
