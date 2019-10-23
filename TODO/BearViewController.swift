@@ -54,6 +54,9 @@ class BearViewController: UIViewController, UINavigationControllerDelegate {
         /// 添加拖动手势
         panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         mainNavController?.view.addGestureRecognizer(panGestureRecognizer!)
+        
+        /// 设置点击手势
+        tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture))
     }
     
     // 拖动手势响应
@@ -118,18 +121,19 @@ class BearViewController: UIViewController, UINavigationControllerDelegate {
     func animateMainView(shouldExpand: Bool) {
         // 如果是用来展开
         if shouldExpand {
-            // 更新当前状态
-            currentState = .Expanded
             // 动画
             animateMainViewXposition(targetPosition: mainNavController!.view.frame.width - menuNavViewExpandedOffset) { (isComplete) in
-                /// 添加单击手势
-                self.tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.handleTapGesture))
-                self.mainNavController?.view.addGestureRecognizer(self.tapGestureRecognizer!)
-                // 设置mainNav不可滚动
-                (self.mainNavController?.children.first as? CategoryTableViewController)?.tableView.isScrollEnabled = false
-                /// 菜单栏添加拖动手势
-                let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.handlePanGesture(_:)))
-                self.menuNavController?.view.addGestureRecognizer(panGestureRecognizer)
+                // 当前状态如果是未展开状态，则添加手势，否则不添加手势
+                if self.currentState != .Expanded {
+                    /// 添加单击手势
+                    self.mainNavController?.view.addGestureRecognizer(self.tapGestureRecognizer!)
+                    // 设置mainNav不可滚动
+                    (self.mainNavController?.children.first as? CategoryTableViewController)?.tableView.isScrollEnabled = false
+                    /// 菜单栏添加拖动手势
+                    let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.handlePanGesture(_:)))
+                    self.menuNavController?.view.addGestureRecognizer(panGestureRecognizer)
+                }
+                self.currentState = .Expanded
             }
         }
         // 如果用于隐藏
@@ -146,9 +150,7 @@ class BearViewController: UIViewController, UINavigationControllerDelegate {
                 // 设置主页面可以滚动
                 (self.mainNavController?.children.first as? CategoryTableViewController)?.tableView.isScrollEnabled = true
                 // 移除单击手势
-                if self.tapGestureRecognizer != nil {
-                    self.mainNavController?.view.removeGestureRecognizer(self.tapGestureRecognizer!)
-                }
+                self.mainNavController?.view.removeGestureRecognizer(self.tapGestureRecognizer!)
             }
         }
     }
@@ -158,7 +160,7 @@ class BearViewController: UIViewController, UINavigationControllerDelegate {
         // usingSpringWithDamping: 1.0 表示没有弹簧震动动画
         UIView.animate(withDuration: 0.8,
                        delay: 0,
-                       usingSpringWithDamping: 0.85,
+                       usingSpringWithDamping: 1,
                        initialSpringVelocity: 0,
                        options: .curveEaseInOut,
                        animations: {
