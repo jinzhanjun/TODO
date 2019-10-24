@@ -85,13 +85,14 @@ class BearViewController: UIViewController, UINavigationControllerDelegate {
         case .ended:
             // 根据页面滑动是否过半，判断后面是自动展开还是收缩
             let hasMovedhanHalfway = { () -> Bool in
+                guard isOnMain else {return recognizer.velocity(in: self.view).x > 0}
                 if (recognizer.view?.center.x)! > self.view.bounds.size.width || recognizer.velocity(in: self.view).x > CGFloat(1000) {
                     return true
                 }
                 return false
             }
             // 自动展开方法
-            isOnMain ? animateMainView(shouldExpand: hasMovedhanHalfway()) : animateMainView(shouldExpand: recognizer.velocity(in: view).x > 0)
+            animateMainView(shouldExpand: hasMovedhanHalfway())
         default:
             break
         }
