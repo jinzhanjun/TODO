@@ -27,7 +27,7 @@ class BearViewController: UIViewController, UINavigationControllerDelegate {
         // 已展开
         case Expanded
     }
-
+    
     /// 菜单打开后主页在屏幕右侧露出部分的宽度
     let menuNavViewExpandedOffset: CGFloat = 160
     var currentState = MenuState.Collapsed {
@@ -51,6 +51,7 @@ class BearViewController: UIViewController, UINavigationControllerDelegate {
         
         // 设置代理
         mainNavController?.delegate = self
+
         /// 添加拖动手势
         panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         mainNavController?.view.addGestureRecognizer(panGestureRecognizer!)
@@ -83,10 +84,10 @@ class BearViewController: UIViewController, UINavigationControllerDelegate {
             mainNavController?.view?.frame.origin.x = positionX < 0 ? 0 : positionX
             recognizer.setTranslation(.zero, in: view)
         case .ended:
-            // 根据页面滑动是否过半，判断后面是自动展开还是收缩
-            let hasMovedhanHalfway = { () -> Bool in
-                guard isOnMain else {return recognizer.velocity(in: self.view).x > 0}
-                if (recognizer.view?.center.x)! > self.view.bounds.size.width || recognizer.velocity(in: self.view).x > CGFloat(1000) {
+            // 根据页面滑动是否过半，判断后面是自动展开还是收缩(闭包-注意循环引用，需要使用weak self)
+            let hasMovedhanHalfway = { [weak self] () -> Bool in
+                guard isOnMain else {return recognizer.velocity(in: self?.view).x > 0}
+                if (recognizer.view?.center.x)! > self?.view.bounds.size.width ?? 375 || recognizer.velocity(in: self?.view).x > CGFloat(1000) {
                     return true
                 }
                 return false
@@ -123,35 +124,41 @@ class BearViewController: UIViewController, UINavigationControllerDelegate {
         // 如果是用来展开
         if shouldExpand {
             // 动画
-            animateMainViewXposition(targetPosition: mainNavController!.view.frame.width - menuNavViewExpandedOffset) { (isComplete) in
-                // 当前状态如果是未展开状态，则添加手势，否则不添加手势
-                if self.currentState != .Expanded {
-                    /// 添加单击手势
-                    self.mainNavController?.view.addGestureRecognizer(self.tapGestureRecognizer!)
-                    // 设置mainNav不可滚动
-                    (self.mainNavController?.children.first as? CategoryTableViewController)?.tableView.isScrollEnabled = false
-                    /// 菜单栏添加拖动手势
-                    let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self.handlePanGesture(_:)))
-                    self.menuNavController?.view.addGestureRecognizer(panGestureRecognizer)
+            animateMainViewXposition(targetPosition: mainNavController!.view.frame.width - menuNavViewExpandedOffset) { [weak self] isComplete in
+                if isComplete {
+                    // 当前状态如果是未展开状态，则添加手势，否则不添加手势
+                    if self?.currentState != .Expanded {
+                        /// 添加单击手势
+                        guard let tapGestureRecognizer = self?.tapGestureRecognizer else {return}
+                        self?.mainNavController?.view.addGestureRecognizer(tapGestureRecognizer)
+                        // 禁止mainNavController的表格用户交互
+                        (self?.mainNavController?.children.first as? CategoryTableViewController)?.tableView.isUserInteractionEnabled = false
+                        /// 菜单栏添加拖动手势
+                        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(self?.handlePanGesture(_:)))
+                        self?.menuNavController?.view.addGestureRecognizer(panGestureRecognizer)
+                    }
+                    self?.currentState = .Expanded
                 }
-                self.currentState = .Expanded
             }
         }
         // 如果用于隐藏
         else {
             // 动画
-            animateMainViewXposition(targetPosition: 0) { (isCompletion) in
-                // 动画结束后，更新状态
-                // 更新当前状态
-                self.currentState = .Collapsed
-                // 移除左侧菜单视图
-                self.menuNavController?.view.removeFromSuperview()
-                // 释放内存
-                self.menuNavController = nil
-                // 设置主页面可以滚动
-                (self.mainNavController?.children.first as? CategoryTableViewController)?.tableView.isScrollEnabled = true
-                // 移除单击手势
-                self.mainNavController?.view.removeGestureRecognizer(self.tapGestureRecognizer!)
+            animateMainViewXposition(targetPosition: 0) { [weak self] (isCompletion) in
+                if isCompletion {
+                    // 动画结束后，更新状态
+                    // 更新当前状态
+                    self?.currentState = .Collapsed
+                    // 移除左侧菜单视图
+                    self?.menuNavController?.view.removeFromSuperview()
+                    // 释放内存
+                    self?.menuNavController = nil
+                    // 开启mainNavController的表格用户交互
+                    (self?.mainNavController?.children.first as? CategoryTableViewController)?.tableView.isUserInteractionEnabled = true
+                    // 移除单击手势
+                    guard let tapGestureRecognizer = self?.tapGestureRecognizer else {return}
+                    self?.mainNavController?.view.removeGestureRecognizer(tapGestureRecognizer)
+                }
             }
         }
     }
@@ -159,13 +166,13 @@ class BearViewController: UIViewController, UINavigationControllerDelegate {
     // 主页移动动画
     func animateMainViewXposition(targetPosition: CGFloat, completion: ((Bool) -> Void)? = nil) {
         // usingSpringWithDamping: 1.0 表示没有弹簧震动动画
-        UIView.animate(withDuration: 0.8,
+        UIView.animate(withDuration: 0.4,
                        delay: 0,
                        usingSpringWithDamping: 1,
                        initialSpringVelocity: 0,
-                       options: .curveEaseInOut,
-                       animations: {
-                        self.mainNavController?.view.frame.origin.x = targetPosition
+                       options: .allowAnimatedContent,
+                       animations: { [weak self] in
+                        self?.mainNavController?.view.frame.origin.x = targetPosition
         }, completion: completion)
     }
     
@@ -173,10 +180,24 @@ class BearViewController: UIViewController, UINavigationControllerDelegate {
     func showShadowForMainViewController(shouldShowShadow: Bool) {
         
         if shouldShowShadow {
+//            mainNavController?.view.backgroundColor = UIColor.white
             mainNavController?.view.layer.shadowOpacity = 0.8
             mainNavController?.view.layer.shadowColor = UIColor.darkGray.cgColor
             mainNavController?.view.layer.shadowRadius = 0.6
-            mainNavController?.view.layer.shadowOffset = CGSize(width: 2, height: 2)
+            mainNavController?.view.layer.shadowOffset = CGSize(width: -10, height: 10)
+//            mainNavController?.children.first?.view.layer.shadowOpacity = 0.8
+//            mainNavController?.children.first?.view.layer.shadowColor = UIColor.darkGray.cgColor
+//            mainNavController?.children.first?.view.layer.shadowRadius = 0.6
+//            mainNavController?.children.first?.view.layer.shadowOffset = CGSize(width: 100, height: 100)
+//            // 设置阴影透明度
+//            (mainNavController?.children.first?.view as? UITableView)?.layer.shadowOpacity = 0
+//            // 设置阴影颜色
+//            (mainNavController?.children.first?.view as? UITableView)?.layer.shadowColor = UIColor.black.cgColor
+//            // 设置阴影半径
+//            (mainNavController?.children.first?.view as? UITableView)?.layer.shadowRadius = 0.6
+//            // 设置阴影偏移量
+//            (mainNavController?.children.first?.view as? UITableView)?.layer.shadowOffset = CGSize(width: 10, height: 10)
+            
         } else {
             mainNavController?.view.layer.shadowOpacity = 0.0
         }

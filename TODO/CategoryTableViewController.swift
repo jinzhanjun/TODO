@@ -20,6 +20,10 @@ class CategoryTableViewController: UITableViewController {
         super.viewDidLoad()
         tableView.rowHeight = 80.0
         tableView.separatorStyle = .none
+//        view.backgroundColor = UIColor.white
+//        view.layer.shadowOpacity = 0.8
+//        view.layer.shadowColor = UIColor.black.cgColor
+//        view.layer.shadowOffset = CGSize(width: -50, height: 50)
         loadCategories()
 //        navigationController?.navigationBar.isHidden = true
     }
