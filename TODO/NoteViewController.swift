@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NoteViewController: UIViewController, UITextViewDelegate {
+class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDelegate {
 
     var noteTitle: String?
     var block: ((String) -> Void)?
@@ -39,6 +39,9 @@ class NoteViewController: UIViewController, UITextViewDelegate {
         // 监听键盘发出的通知（通知的名称为：UIResponder.keyboardWillChangeFrameNotification）
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         noteTextView.text = noteTitle ?? ""
+//        noteTextView.contentInset = UIEdgeInsets(top: UIScreen.main.bounds.height - 44, left: 0, bottom: UIScreen.main.bounds.height, right: UIScreen.main.bounds.width)
+        noteTextView.contentInsetAdjustmentBehavior = .never
+        noteTextView.contentOffset = CGPoint(x: 200, y: 500)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -47,6 +50,13 @@ class NoteViewController: UIViewController, UITextViewDelegate {
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         noteTextView.becomeFirstResponder()
+    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        print("滚动了")
+    }
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        if noteTextView.isFirstResponder { noteTextView.resignFirstResponder() }
     }
     
     // 添加文字
@@ -150,15 +160,17 @@ class NoteViewController: UIViewController, UITextViewDelegate {
             else {return}
         if frame.origin.y == UIScreen.main.bounds.size.height {
             UIView.animate(withDuration: duration) {
+                self.noteTextView.transform = CGAffineTransform(translationX: 0, y: 0)
                 self.toolBar.transform = CGAffineTransform(translationX: 0, y: 0)
             }
         } else {
             UIView.animate(withDuration: duration) {
+                self.noteTextView.transform = CGAffineTransform(translationX: 0, y: -frame.size.height)
                 self.toolBar.transform = CGAffineTransform(translationX: 0, y: -frame.size.height)
             }
         }
     }
-    
+
     /// 图片附件的尺寸样式
     enum ImageAttachmentMode {
         case `default` // 默认（不改变大小）

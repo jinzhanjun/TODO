@@ -54,8 +54,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="1233656563" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="OvZ-C9-l6l">
-                                <rect key="frame" x="0.0" y="44" width="375" height="623"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" text="1233656563" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="OvZ-C9-l6l">
+                                <rect key="frame" x="16" y="44" width="343" height="579"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <accessibilityTraits key="traits" image="YES" header="YES"/>
@@ -64,9 +64,11 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JIN-Uy-eDv">
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JIN-Uy-eDv">
                                 <rect key="frame" x="0.0" y="623" width="375" height="44"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="p4d-Qr-gMa"/>
+                                </constraints>
                                 <items>
                                     <barButtonItem title="添加" id="FB5-HM-IQH">
                                         <connections>
@@ -83,10 +85,13 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="OvZ-C9-l6l" firstAttribute="top" secondItem="5Zj-IA-ybl" secondAttribute="top" id="C3L-cv-VNW"/>
-                            <constraint firstItem="OvZ-C9-l6l" firstAttribute="leading" secondItem="5Zj-IA-ybl" secondAttribute="leading" id="GdJ-yT-woc"/>
-                            <constraint firstItem="OvZ-C9-l6l" firstAttribute="bottom" secondItem="5Zj-IA-ybl" secondAttribute="bottom" id="M6i-y1-uKV"/>
-                            <constraint firstItem="OvZ-C9-l6l" firstAttribute="centerX" secondItem="WHp-X7-BcZ" secondAttribute="centerX" id="x9w-ay-nWr"/>
+                            <constraint firstItem="5Zj-IA-ybl" firstAttribute="bottom" secondItem="OvZ-C9-l6l" secondAttribute="bottom" constant="44" id="Bfw-RG-mM0"/>
+                            <constraint firstItem="JIN-Uy-eDv" firstAttribute="leading" secondItem="5Zj-IA-ybl" secondAttribute="leading" id="Cfh-rO-5zG"/>
+                            <constraint firstItem="5Zj-IA-ybl" firstAttribute="trailing" secondItem="JIN-Uy-eDv" secondAttribute="trailing" id="Dj2-5j-Opi"/>
+                            <constraint firstItem="5Zj-IA-ybl" firstAttribute="bottom" secondItem="JIN-Uy-eDv" secondAttribute="bottom" id="F5N-Wd-aAG"/>
+                            <constraint firstItem="OvZ-C9-l6l" firstAttribute="top" secondItem="5Zj-IA-ybl" secondAttribute="top" id="Hly-Qg-73q"/>
+                            <constraint firstItem="OvZ-C9-l6l" firstAttribute="leading" secondItem="5Zj-IA-ybl" secondAttribute="leading" constant="16" id="gsf-Lt-LeV"/>
+                            <constraint firstItem="5Zj-IA-ybl" firstAttribute="trailing" secondItem="OvZ-C9-l6l" secondAttribute="trailing" constant="16" id="mKV-1z-ITb"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="5Zj-IA-ybl"/>
                     </view>
