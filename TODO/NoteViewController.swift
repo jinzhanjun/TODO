@@ -144,7 +144,6 @@ class NoteViewController: UIViewController, UITextViewDelegate {
     }
     
     @objc private func keyboardWillChangeFrame(notification: NSNotification) {
-        print("接收到\(notification.name)的通知")
         
         guard let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
             let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
