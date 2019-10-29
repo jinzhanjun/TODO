@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NoteViewController: UIViewController {
+class NoteViewController: UIViewController, UITextViewDelegate {
 
     var noteTitle: String?
     var block: ((String) -> Void)?
@@ -21,6 +21,9 @@ class NoteViewController: UIViewController {
         addText("欢迎使用！")
     }
     
+    @IBOutlet weak var toolBar: UIToolbar!
+    
+    
     @IBAction func deleteBtnPressed(_ sender: UIBarButtonItem) {
 //        deleteText(NSRange(location: noteTextView.selectedRange.location - 3, length: 3))
         
@@ -32,11 +35,18 @@ class NoteViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        noteTextView.delegate = self
+        // 监听键盘发出的通知（通知的名称为：UIResponder.keyboardWillChangeFrameNotification）
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
         noteTextView.text = noteTitle ?? ""
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         block?(noteTextView.text)
+    }
+    
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        noteTextView.becomeFirstResponder()
     }
     
     // 添加文字
@@ -80,7 +90,7 @@ class NoteViewController: UIViewController {
         }
         
         // 记录当前光标位置
-        let newSelectedRange = NSRange(location: selectedRange.location - range.length, length: 0)
+        let newSelectedRange = NSMakeRange(selectedRange.location - range.length, 0)
         // 设置文字字体大小
         mutableStr.addAttribute(NSAttributedString.Key.font, value: textFont, range: NSMakeRange(0, mutableStr.length))
         
@@ -131,6 +141,23 @@ class NoteViewController: UIViewController {
         
         // 移动滚动条（确保光标在可视区域之内）
         noteTextView.scrollRangeToVisible(newSelectedRange)
+    }
+    
+    @objc private func keyboardWillChangeFrame(notification: NSNotification) {
+        print("接收到\(notification.name)的通知")
+        
+        guard let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
+            let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
+            else {return}
+        if frame.origin.y == UIScreen.main.bounds.size.height {
+            UIView.animate(withDuration: duration) {
+                self.toolBar.transform = CGAffineTransform(translationX: 0, y: 0)
+            }
+        } else {
+            UIView.animate(withDuration: duration) {
+                self.toolBar.transform = CGAffineTransform(translationX: 0, y: -frame.size.height)
+            }
+        }
     }
     
     /// 图片附件的尺寸样式

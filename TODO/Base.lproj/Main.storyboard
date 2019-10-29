@@ -93,6 +93,7 @@
                     <navigationItem key="navigationItem" id="gcJ-x2-wua"/>
                     <connections>
                         <outlet property="noteTextView" destination="OvZ-C9-l6l" id="APk-2W-Cwq"/>
+                        <outlet property="toolBar" destination="JIN-Uy-eDv" id="NYN-ax-whP"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oo1-cM-bJA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -132,7 +133,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZvL-N8-HEq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1799" y="295"/>
+            <point key="canvasLocation" x="-1454" y="294"/>
         </scene>
         <!--Root View Controller-->
         <scene sceneID="wLr-Yc-Gzp">
