@@ -53,52 +53,10 @@
                     <view key="view" contentMode="scaleToFill" id="WHp-X7-BcZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OvZ-C9-l6l">
-                                <rect key="frame" x="0.0" y="44" width="375" height="579"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                <accessibility key="accessibilityConfiguration">
-                                    <accessibilityTraits key="traits" image="YES" header="YES"/>
-                                </accessibility>
-                                <attributedString key="attributedText"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JIN-Uy-eDv">
-                                <rect key="frame" x="0.0" y="623" width="375" height="44"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="44" id="p4d-Qr-gMa"/>
-                                </constraints>
-                                <items>
-                                    <barButtonItem title="添加" id="FB5-HM-IQH">
-                                        <connections>
-                                            <action selector="addBtnPressed:" destination="zMG-qg-1Uf" id="k8q-CP-4ok"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem title="确认" id="qtj-R4-rR6">
-                                        <connections>
-                                            <action selector="deleteBtnPressed:" destination="zMG-qg-1Uf" id="ClM-W6-WOa"/>
-                                        </connections>
-                                    </barButtonItem>
-                                </items>
-                            </toolbar>
-                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <constraints>
-                            <constraint firstItem="5Zj-IA-ybl" firstAttribute="bottom" secondItem="OvZ-C9-l6l" secondAttribute="bottom" constant="44" id="Bfw-RG-mM0"/>
-                            <constraint firstItem="JIN-Uy-eDv" firstAttribute="leading" secondItem="5Zj-IA-ybl" secondAttribute="leading" id="Cfh-rO-5zG"/>
-                            <constraint firstItem="5Zj-IA-ybl" firstAttribute="trailing" secondItem="JIN-Uy-eDv" secondAttribute="trailing" id="Dj2-5j-Opi"/>
-                            <constraint firstItem="5Zj-IA-ybl" firstAttribute="bottom" secondItem="JIN-Uy-eDv" secondAttribute="bottom" id="F5N-Wd-aAG"/>
-                            <constraint firstItem="OvZ-C9-l6l" firstAttribute="top" secondItem="5Zj-IA-ybl" secondAttribute="top" id="Hly-Qg-73q"/>
-                            <constraint firstItem="OvZ-C9-l6l" firstAttribute="leading" secondItem="5Zj-IA-ybl" secondAttribute="leading" id="gsf-Lt-LeV"/>
-                            <constraint firstItem="5Zj-IA-ybl" firstAttribute="trailing" secondItem="OvZ-C9-l6l" secondAttribute="trailing" id="mKV-1z-ITb"/>
-                        </constraints>
                         <viewLayoutGuide key="safeArea" id="5Zj-IA-ybl"/>
                     </view>
                     <navigationItem key="navigationItem" id="gcJ-x2-wua"/>
-                    <connections>
-                        <outlet property="noteTextView" destination="OvZ-C9-l6l" id="APk-2W-Cwq"/>
-                        <outlet property="toolBar" destination="JIN-Uy-eDv" id="NYN-ax-whP"/>
-                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oo1-cM-bJA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

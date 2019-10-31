@@ -10,37 +10,25 @@ import UIKit
 
 class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDelegate {
 
+    /// 记事本内容
     var noteTitle: String?
     var block: ((String) -> Void)?
     // 设置字体大小
     var textFont = UIFont.systemFont(ofSize: 23)
     /// 文本框视图
-    @IBOutlet weak var noteTextView: UITextView!
-    // 点击添加按钮
-    @IBAction func addBtnPressed(_ sender: UIBarButtonItem) {
-        addText("欢迎使用！")
-    }
-    
-    @IBOutlet weak var toolBar: UIToolbar!
-    
-    
-    @IBAction func deleteBtnPressed(_ sender: UIBarButtonItem) {
-//        deleteText(NSRange(location: noteTextView.selectedRange.location - 3, length: 3))
-        
-        guard let image = UIImage(named: "Trash-circle") else {return}
-        insertPic(image, mode: .fitTextLine)
-        
-    }
+    let noteTextView: NoteTextView = NoteTextView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 44))
+    /// 工具栏
+    var toolBar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: UIScreen.main.bounds.height - 44, width: UIScreen.main.bounds.width, height: 44))
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.addSubview(noteTextView)
+        view.addSubview(toolBar)
         noteTextView.delegate = self
+        noteTextView.text = noteTitle
+        setupToolBar()
         // 监听键盘发出的通知（通知的名称为：UIResponder.keyboardWillChangeFrameNotification）
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
-        noteTextView.text = noteTitle ?? ""
-//        noteTextView.contentInset = UIEdgeInsets(top: UIScreen.main.bounds.height - 44, left: 0, bottom: UIScreen.main.bounds.height, right: UIScreen.main.bounds.width)
-        noteTextView.contentInsetAdjustmentBehavior = .never
-        noteTextView.contentOffset = CGPoint(x: 200, y: 500)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -58,18 +46,23 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         if noteTextView.isFirstResponder { noteTextView.resignFirstResponder() }
     }
     
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
-        var textWidth = textView.frame.inset(by: textView.textContainerInset).width
-        textWidth -= 2 * (textView.textContainer.lineFragmentPadding + 1)
-        
-        let lineCounts = lineCountsOfString(string: newText, constrainedToWidth: Double(textWidth), font: textView.font!)
-        if text == "\n" {
-            
-        }
-        
-        return true
+    private func setupToolBar() {
+        toolBar.backgroundColor = UIColor.red
+        let addTextBtn = UIBarButtonItem(title: "添加", style: .plain, target: self, action: Selector(("addText")))
+        toolBar.items = [addTextBtn]
     }
+//    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+//        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
+//        var textWidth = textView.frame.inset(by: textView.textContainerInset).width
+//        textWidth -= 2 * (textView.textContainer.lineFragmentPadding + 1)
+//
+//        let lineCounts = lineCountsOfString(string: newText, constrainedToWidth: Double(textWidth), font: textView.font!)
+//        if text == "\n" {
+//
+//        }
+//
+//        return true
+//    }
     
     private func lineCountsOfString(string: String, constrainedToWidth: Double, font: UIFont) -> Double {
         let textSize = NSString(string: string).size(withAttributes: [NSAttributedString.Key.font: font])
@@ -78,7 +71,7 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     }
     
     // 添加文字
-    private func addText(_ text: String) {
+    @objc private func addText() {
         // 获取textView的文本，并且转换成可变文本
         let mutableStr = NSMutableAttributedString(attributedString: noteTextView.attributedText)
         
@@ -86,7 +79,7 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         let selectedRange = noteTextView.selectedRange
         
         // 插入文字
-        let attStr = NSAttributedString(string: text)
+        let attStr = NSAttributedString(string: "欢迎使用！")
         mutableStr.insert(attStr, at: selectedRange.location)
         
         // 改变可变文本的字体属性
@@ -101,31 +94,6 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         // 恢复光标位置(上面代码执行之后，光标会移到最后面)
         noteTextView.selectedRange = newSelectedRange
         
-    }
-    
-    // 删除文字
-    private func deleteText(_ range: NSRange) {
-        // 获取可变文字
-        let mutableStr = NSMutableAttributedString(attributedString: noteTextView.attributedText)
-        // 获取当前光标位置
-        let selectedRange = noteTextView.selectedRange
-        /// FIXME : - 删除到最后崩溃！
-        // 删除文字
-        if range.location >= 3 {
-            mutableStr.deleteCharacters(in: range)
-        } else {
-            mutableStr.deleteCharacters(in: NSRange(location: selectedRange.location, length: mutableStr.length))
-        }
-        
-        // 记录当前光标位置
-        let newSelectedRange = NSMakeRange(selectedRange.location - range.length, 0)
-        // 设置文字字体大小
-        mutableStr.addAttribute(NSAttributedString.Key.font, value: textFont, range: NSMakeRange(0, mutableStr.length))
-        
-        // 给文本重新赋值
-        noteTextView.attributedText = mutableStr
-        // 恢复光标位置
-        noteTextView.selectedRange = newSelectedRange
     }
     
     // 插入图片
