@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3B86E3E26D104D42FE10483A /* Pods_TODO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14F4973A6654ADEFE7273832 /* Pods_TODO.framework */; };
+		7E1A22CB236A738B0084B8F4 /* NoteTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1A22CA236A738B0084B8F4 /* NoteTextView.swift */; };
 		7E1D4B5B234E06AE00195E23 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1D4B5A234E06AE00195E23 /* CategoryTableViewController.swift */; };
 		7E35ADBF234B5B7A00049F06 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7E35ADBD234B5B7A00049F06 /* DataModel.xcdatamodeld */; };
 		7E4650F923534F4800B07CF5 /* ToDoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7E4650F823534F4800B07CF5 /* ToDoCell.xib */; };
@@ -26,6 +27,7 @@
 
 /* Begin PBXFileReference section */
 		14F4973A6654ADEFE7273832 /* Pods_TODO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TODO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7E1A22CA236A738B0084B8F4 /* NoteTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTextView.swift; sourceTree = "<group>"; };
 		7E1D4B5A234E06AE00195E23 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 		7E35ADBE234B5B7A00049F06 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		7E4650F823534F4800B07CF5 /* ToDoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ToDoCell.xib; sourceTree = "<group>"; };
@@ -98,6 +100,7 @@
 			children = (
 				7ECA8C96234AFD4E00A7D191 /* AppDelegate.swift */,
 				7ECA8C98234AFD4E00A7D191 /* SceneDelegate.swift */,
+				7E1A22CA236A738B0084B8F4 /* NoteTextView.swift */,
 				7E9AA49E2358CB15007B6E88 /* NoteViewController.swift */,
 				7E35ADBD234B5B7A00049F06 /* DataModel.xcdatamodeld */,
 				7E1D4B5A234E06AE00195E23 /* CategoryTableViewController.swift */,
@@ -240,6 +243,7 @@
 				7E72225B235DE45500FCB5E4 /* BearViewController.swift in Sources */,
 				7E4650FB23535AB300B07CF5 /* ToDoTableViewCell.swift in Sources */,
 				7E52A1B7235B35E700311D85 /* ToDoItemListViewController.swift in Sources */,
+				7E1A22CB236A738B0084B8F4 /* NoteTextView.swift in Sources */,
 				7ECA8C99234AFD4E00A7D191 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -391,7 +395,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8AQ47Z9975;
 				INFOPLIST_FILE = TODO/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -412,7 +416,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8AQ47Z9975;
 				INFOPLIST_FILE = TODO/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

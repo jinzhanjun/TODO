@@ -32,7 +32,6 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         
     }
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         noteTextView.delegate = self
@@ -57,6 +56,25 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     }
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         if noteTextView.isFirstResponder { noteTextView.resignFirstResponder() }
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
+        var textWidth = textView.frame.inset(by: textView.textContainerInset).width
+        textWidth -= 2 * (textView.textContainer.lineFragmentPadding + 1)
+        
+        let lineCounts = lineCountsOfString(string: newText, constrainedToWidth: Double(textWidth), font: textView.font!)
+        if text == "\n" {
+            
+        }
+        
+        return true
+    }
+    
+    private func lineCountsOfString(string: String, constrainedToWidth: Double, font: UIFont) -> Double {
+        let textSize = NSString(string: string).size(withAttributes: [NSAttributedString.Key.font: font])
+        let lineCount = ceil(Double(textSize.width) / Double(constrainedToWidth))
+        return lineCount
     }
     
     // 添加文字

@@ -54,14 +54,13 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" text="1233656563" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="OvZ-C9-l6l">
-                                <rect key="frame" x="16" y="44" width="343" height="579"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OvZ-C9-l6l">
+                                <rect key="frame" x="0.0" y="44" width="375" height="579"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <accessibility key="accessibilityConfiguration">
                                     <accessibilityTraits key="traits" image="YES" header="YES"/>
                                 </accessibility>
-                                <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <attributedString key="attributedText"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JIN-Uy-eDv">
@@ -90,8 +89,8 @@
                             <constraint firstItem="5Zj-IA-ybl" firstAttribute="trailing" secondItem="JIN-Uy-eDv" secondAttribute="trailing" id="Dj2-5j-Opi"/>
                             <constraint firstItem="5Zj-IA-ybl" firstAttribute="bottom" secondItem="JIN-Uy-eDv" secondAttribute="bottom" id="F5N-Wd-aAG"/>
                             <constraint firstItem="OvZ-C9-l6l" firstAttribute="top" secondItem="5Zj-IA-ybl" secondAttribute="top" id="Hly-Qg-73q"/>
-                            <constraint firstItem="OvZ-C9-l6l" firstAttribute="leading" secondItem="5Zj-IA-ybl" secondAttribute="leading" constant="16" id="gsf-Lt-LeV"/>
-                            <constraint firstItem="5Zj-IA-ybl" firstAttribute="trailing" secondItem="OvZ-C9-l6l" secondAttribute="trailing" constant="16" id="mKV-1z-ITb"/>
+                            <constraint firstItem="OvZ-C9-l6l" firstAttribute="leading" secondItem="5Zj-IA-ybl" secondAttribute="leading" id="gsf-Lt-LeV"/>
+                            <constraint firstItem="5Zj-IA-ybl" firstAttribute="trailing" secondItem="OvZ-C9-l6l" secondAttribute="trailing" id="mKV-1z-ITb"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="5Zj-IA-ybl"/>
                     </view>
