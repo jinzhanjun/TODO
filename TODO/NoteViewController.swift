@@ -11,22 +11,20 @@ import UIKit
 class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDelegate {
 
     /// 记事本内容
-    var noteTitle: String?
+    @objc var noteTitle: String?
     var block: ((String) -> Void)?
     // 设置字体大小
     var textFont = UIFont.systemFont(ofSize: 23)
     /// 文本框视图
     let noteTextView: NoteTextView = NoteTextView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 44))
     /// 工具栏
-    var toolBar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: UIScreen.main.bounds.height - 44, width: UIScreen.main.bounds.width, height: 44))
+    let toolBar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: UIScreen.main.bounds.height - 44, width: UIScreen.main.bounds.width, height: 44))
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(noteTextView)
-        view.addSubview(toolBar)
         noteTextView.delegate = self
-        noteTextView.text = noteTitle
-        setupToolBar()
+        setupUI()
+        
         // 监听键盘发出的通知（通知的名称为：UIResponder.keyboardWillChangeFrameNotification）
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
@@ -45,24 +43,34 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         if noteTextView.isFirstResponder { noteTextView.resignFirstResponder() }
     }
-    
+    // 设置界面
+    private func setupUI() {
+        noteTextView.text = noteTitle
+        noteTextView.placeHolderStr = "H1"
+        view.addSubview(noteTextView)
+        setupToolBar()
+    }
+    // 设置工具栏
     private func setupToolBar() {
         toolBar.backgroundColor = UIColor.red
         let addTextBtn = UIBarButtonItem(title: "添加", style: .plain, target: self, action: Selector(("addText")))
-        toolBar.items = [addTextBtn]
+//        toolBar.items = [addTextBtn, addTextBtn]
+        toolBar.setItems([addTextBtn], animated: true)
+        view.addSubview(toolBar)
     }
-//    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-//        let newText = (textView.text as NSString).replacingCharacters(in: range, with: text)
-//        var textWidth = textView.frame.inset(by: textView.textContainerInset).width
-//        textWidth -= 2 * (textView.textContainer.lineFragmentPadding + 1)
-//
-//        let lineCounts = lineCountsOfString(string: newText, constrainedToWidth: Double(textWidth), font: textView.font!)
-//        if text == "\n" {
-//
-//        }
-//
-//        return true
-//    }
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        // 获取光标位置
+        let selectedRange = textView.selectedTextRange
+        let rect = textView.caretRect(for: selectedRange!.end)
+        if text == "\n" {
+            // 添加段落标志
+            if let textView = textView as? NoteTextView {
+                textView.addLineStyleLabel(by: rect, with: "H1")
+                print(rect)
+            }
+        }
+        return true
+    }
     
     private func lineCountsOfString(string: String, constrainedToWidth: Double, font: UIFont) -> Double {
         let textSize = NSString(string: string).size(withAttributes: [NSAttributedString.Key.font: font])
@@ -93,7 +101,6 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         
         // 恢复光标位置(上面代码执行之后，光标会移到最后面)
         noteTextView.selectedRange = newSelectedRange
-        
     }
     
     // 插入图片
