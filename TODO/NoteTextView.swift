@@ -40,9 +40,19 @@ class NoteTextView: UITextView {
         let lineStyleLabel = UILabel()
         lineStyleLabel.text = string
         lineStyleLabel.textColor = UIColor.darkGray
+        lineStyleLabel.font = UIFont.systemFont(ofSize: 15)
         lineStyleLabel.sizeToFit()
-        let y = rect.maxY + lineStyleLabel.bounds.height / 4
-        lineStyleLabel.frame.origin = CGPoint(x: 10, y: y)
+        let y = rect.maxY + rect.height / 2
+        lineStyleLabel.center = CGPoint(x: 20, y: y)
         addSubview(lineStyleLabel)
+    }
+}
+
+extension UILabel {
+    override open var center: CGPoint {
+        didSet {
+            self.frame.origin.x = self.center.x - self.bounds.width / 2
+            self.frame.origin.y = self.center.y - self.bounds.height / 2
+        }
     }
 }

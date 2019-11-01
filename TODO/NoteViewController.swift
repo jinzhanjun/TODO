@@ -54,10 +54,10 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     private func setupToolBar() {
         toolBar.backgroundColor = UIColor.red
         let addTextBtn = UIBarButtonItem(title: "添加", style: .plain, target: self, action: Selector(("addText")))
-//        toolBar.items = [addTextBtn, addTextBtn]
         toolBar.setItems([addTextBtn], animated: true)
         view.addSubview(toolBar)
     }
+    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         // 获取光标位置
         let selectedRange = textView.selectedTextRange
@@ -66,7 +66,6 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
             // 添加段落标志
             if let textView = textView as? NoteTextView {
                 textView.addLineStyleLabel(by: rect, with: "H1")
-                print(rect)
             }
         }
         return true
