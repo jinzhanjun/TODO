@@ -24,7 +24,9 @@ class CategoryTableViewController: UITableViewController {
         
         
 //        view.layer.shadowOpacity = 0.8
-//        view.layer.shadowColor = UIColor.black.cgColor
+//        view.layer.shadowColor = UIColor.black.cgColo
+        
+        //r
 //        view.layer.shadowOffset = CGSize(width: -50, height: 50)
         loadCategories()
 //        navigationController?.navigationBar.isHidden = true
