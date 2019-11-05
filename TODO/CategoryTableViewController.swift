@@ -31,7 +31,7 @@ class CategoryTableViewController: UITableViewController {
     override func viewWillAppear(_ animated: Bool) {
         guard let originalColor = UIColor(hexString: "1D9BF6") else { fatalError()}
         navigationController?.navigationBar.backgroundColor = originalColor
-        navigationController?.navigationBar.tintColor = FlatOrange()
+//        navigationController?.navigationBar.tintColor = FlatOrange()
         navigationController?.navigationBar.titleTextAttributes = [NSAttributedString.Key.foregroundColor: originalColor]
     }
     

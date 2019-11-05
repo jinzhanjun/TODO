@@ -27,6 +27,8 @@
 
 /* Begin PBXFileReference section */
 		14F4973A6654ADEFE7273832 /* Pods_TODO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TODO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B4874F123710C4600A6E754 /* ChameleonFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ChameleonFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B4874F523710C4B00A6E754 /* SwipeCellKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwipeCellKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E1A22CA236A738B0084B8F4 /* NoteTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTextView.swift; sourceTree = "<group>"; };
 		7E1D4B5A234E06AE00195E23 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 		7E35ADBE234B5B7A00049F06 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
@@ -72,6 +74,8 @@
 		41CA43C512A6FBD1008BB41B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7B4874F523710C4B00A6E754 /* SwipeCellKit.framework */,
+				7B4874F123710C4600A6E754 /* ChameleonFramework.framework */,
 				14F4973A6654ADEFE7273832 /* Pods_TODO.framework */,
 			);
 			name = Frameworks;
