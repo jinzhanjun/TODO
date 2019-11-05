@@ -21,13 +21,6 @@ class CategoryTableViewController: UITableViewController {
         tableView.rowHeight = 80.0
         tableView.separatorStyle = .none
 //        view.backgroundColor = UIColor.white
-        
-        
-        
-        
-        
-        
-        
 //        view.layer.shadowOpacity = 0.8
 //        view.layer.shadowColor = UIColor.black.cgColo
         
