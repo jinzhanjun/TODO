@@ -65,7 +65,6 @@ class CategoryTableViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    
     // MARK: - Core Data stack
 
     lazy var persistentContainer: NSPersistentContainer = {
