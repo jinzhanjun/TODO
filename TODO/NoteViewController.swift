@@ -20,8 +20,6 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     /// 工具栏
     let toolBar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: UIScreen.main.bounds.height - 44, width: UIScreen.main.bounds.width, height: 44))
     
-    /// 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         noteTextView.delegate = self
