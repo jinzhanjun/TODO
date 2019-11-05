@@ -8,7 +8,7 @@
 
 import UIKit
 
-class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDelegate {
+class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDelegate, UIImagePickerControllerDelegate {
 
     /// 记事本内容
     @objc var noteTitle: String?
@@ -20,9 +20,12 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     /// 工具栏
     let toolBar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: UIScreen.main.bounds.height - 44, width: UIScreen.main.bounds.width, height: 44))
     
+    /// 
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         noteTextView.delegate = self
+        
         setupUI()
         
         // 监听键盘发出的通知（通知的名称为：UIResponder.keyboardWillChangeFrameNotification）
@@ -100,6 +103,10 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         
         // 恢复光标位置(上面代码执行之后，光标会移到最后面)
         noteTextView.selectedRange = newSelectedRange
+    }
+    
+    private func getSystem() {
+        
     }
     
     // 插入图片

@@ -185,19 +185,6 @@ class BearViewController: UIViewController, UINavigationControllerDelegate {
             mainNavController?.view.layer.shadowColor = UIColor.darkGray.cgColor
             mainNavController?.view.layer.shadowRadius = 0.6
             mainNavController?.view.layer.shadowOffset = CGSize(width: -10, height: 10)
-//            mainNavController?.children.first?.view.layer.shadowOpacity = 0.8
-//            mainNavController?.children.first?.view.layer.shadowColor = UIColor.darkGray.cgColor
-//            mainNavController?.children.first?.view.layer.shadowRadius = 0.6
-//            mainNavController?.children.first?.view.layer.shadowOffset = CGSize(width: 100, height: 100)
-//            // 设置阴影透明度
-//            (mainNavController?.children.first?.view as? UITableView)?.layer.shadowOpacity = 0
-//            // 设置阴影颜色
-//            (mainNavController?.children.first?.view as? UITableView)?.layer.shadowColor = UIColor.black.cgColor
-//            // 设置阴影半径
-//            (mainNavController?.children.first?.view as? UITableView)?.layer.shadowRadius = 0.6
-//            // 设置阴影偏移量
-//            (mainNavController?.children.first?.view as? UITableView)?.layer.shadowOffset = CGSize(width: 10, height: 10)
-            
         } else {
             mainNavController?.view.layer.shadowOpacity = 0.0
         }
