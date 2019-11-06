@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3B86E3E26D104D42FE10483A /* Pods_TODO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14F4973A6654ADEFE7273832 /* Pods_TODO.framework */; };
 		7B28FB952371CDA000116EC0 /* lineStyleLabelModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FB942371CDA000116EC0 /* lineStyleLabelModel.swift */; };
+		7B2FD4322372D15B0036DF3A /* Pods_TODO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14F4973A6654ADEFE7273832 /* Pods_TODO.framework */; };
+		7B2FD4372372D65C0036DF3A /* ChameleonFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B2FD4362372D65C0036DF3A /* ChameleonFramework.framework */; };
+		7B2FD43B2372D6840036DF3A /* SwipeCellKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B2FD43A2372D6840036DF3A /* SwipeCellKit.framework */; };
 		7E1A22CB236A738B0084B8F4 /* NoteTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1A22CA236A738B0084B8F4 /* NoteTextView.swift */; };
 		7E1D4B5B234E06AE00195E23 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1D4B5A234E06AE00195E23 /* CategoryTableViewController.swift */; };
 		7E35ADBF234B5B7A00049F06 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7E35ADBD234B5B7A00049F06 /* DataModel.xcdatamodeld */; };
@@ -29,8 +31,8 @@
 /* Begin PBXFileReference section */
 		14F4973A6654ADEFE7273832 /* Pods_TODO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TODO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B28FB942371CDA000116EC0 /* lineStyleLabelModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = lineStyleLabelModel.swift; sourceTree = "<group>"; };
-		7B4874F123710C4600A6E754 /* ChameleonFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ChameleonFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		7B4874F523710C4B00A6E754 /* SwipeCellKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwipeCellKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B2FD4362372D65C0036DF3A /* ChameleonFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ChameleonFramework.framework; path = "../Library/Developer/Xcode/DerivedData/TODO-dquvllltaksmnmdfmntdslcnxdlt/Build/Products/Debug-iphoneos/ChameleonFramework/ChameleonFramework.framework"; sourceTree = "<group>"; };
+		7B2FD43A2372D6840036DF3A /* SwipeCellKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwipeCellKit.framework; path = "../Library/Developer/Xcode/DerivedData/TODO-dquvllltaksmnmdfmntdslcnxdlt/Build/Products/Debug-iphoneos/SwipeCellKit/SwipeCellKit.framework"; sourceTree = "<group>"; };
 		7E1A22CA236A738B0084B8F4 /* NoteTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTextView.swift; sourceTree = "<group>"; };
 		7E1D4B5A234E06AE00195E23 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 		7E35ADBE234B5B7A00049F06 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
@@ -57,7 +59,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3B86E3E26D104D42FE10483A /* Pods_TODO.framework in Frameworks */,
+				7B2FD43B2372D6840036DF3A /* SwipeCellKit.framework in Frameworks */,
+				7B2FD4322372D15B0036DF3A /* Pods_TODO.framework in Frameworks */,
+				7B2FD4372372D65C0036DF3A /* ChameleonFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,8 +80,8 @@
 		41CA43C512A6FBD1008BB41B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				7B4874F523710C4B00A6E754 /* SwipeCellKit.framework */,
-				7B4874F123710C4600A6E754 /* ChameleonFramework.framework */,
+				7B2FD43A2372D6840036DF3A /* SwipeCellKit.framework */,
+				7B2FD4362372D65C0036DF3A /* ChameleonFramework.framework */,
 				14F4973A6654ADEFE7273832 /* Pods_TODO.framework */,
 			);
 			name = Frameworks;
@@ -399,9 +403,14 @@
 			baseConfigurationReference = B7E1347AD4577956B3B00F34 /* Pods-TODO.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8AQ47Z9975;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = TODO/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -420,9 +429,14 @@
 			baseConfigurationReference = FFDFA28F994608669F4065C5 /* Pods-TODO.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8AQ47Z9975;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)",
+				);
 				INFOPLIST_FILE = TODO/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.1;
 				LD_RUNPATH_SEARCH_PATHS = (

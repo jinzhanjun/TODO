@@ -15,12 +15,14 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     var block: ((String) -> Void)?
     // 设置字体大小
     var textFont = UIFont.systemFont(ofSize: 23)
+    /// 设置字体属性
+    var attrs: [NSAttributedString.Key: Any] = [NSAttributedString.Key.font: 16]
     /// 文本框视图
     let noteTextView: NoteTextView = NoteTextView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 44))
     /// 工具栏
     let toolBar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: UIScreen.main.bounds.height - 44, width: UIScreen.main.bounds.width, height: 44))
 
-    /// 行标志数组
+    /// 段落标志模型数组
     var lineStyleLabelModelArray: [lineStyleLabelModel]? = [] {
         didSet {
             guard let newArray = lineStyleLabelModelArray else {return}
@@ -31,9 +33,7 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         noteTextView.delegate = self
-        
         setupUI()
-        
         // 监听键盘发出的通知（通知的名称为：UIResponder.keyboardWillChangeFrameNotification）
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillChangeFrame(notification:)), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
@@ -55,22 +55,37 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     // 设置界面
     private func setupUI() {
         noteTextView.text = noteTitle
-        noteTextView.placeHolderStr = "H1"
         view.addSubview(noteTextView)
+        
         setupToolBar()
     }
     // 设置工具栏
     private func setupToolBar() {
         toolBar.backgroundColor = UIColor.red
         let addTextBtn = UIBarButtonItem(title: "添加", style: .plain, target: self, action: Selector(("addText")))
-        toolBar.setItems([addTextBtn], animated: true)
+        let lineBtn = UIBarButtonItem(title: "下划线", style: .plain, target: self, action: Selector(("lineText")))
+        toolBar.setItems([addTextBtn, lineBtn], animated: true)
         view.addSubview(toolBar)
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         // 获取光标位置
         let selectedRange = textView.selectedTextRange
+        
+        // 获取textView的text，并将其转换成可变属性文字
+        let mutableStr = NSMutableAttributedString(attributedString: textView.attributedText)
+        
+        // 设置新插入数值的属性
+        let newStr = NSMutableAttributedString(string: text)
+        newStr.addAttributes(attrs, range: NSMakeRange(0, newStr.length))
+        // 插入新的属性文本
+        mutableStr.insert(newStr, at: textView.selectedRange.location)
+        
+        textView.attributedText = mutableStr
+        
+        
         let rect = textView.caretRect(for: selectedRange!.end)
+        print(rect)
         if text == "\n" {
             // 添加段落标志
             let lineLabelModel = lineStyleLabelModel(name: "H1", location: rect)
@@ -88,6 +103,28 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         let lineCount = ceil(Double(textSize.width) / Double(constrainedToWidth))
         return lineCount
     }
+    // 下划线
+    @objc private func lineText() {
+        // 获取textView的文本，并且转换成可变文本
+        let mutableStr = NSMutableAttributedString(attributedString: noteTextView.attributedText)
+        // 获取当前光标位置
+        let selectedRange = noteTextView.selectedRange
+        
+        // 插入文字
+        let insertStr = NSAttributedString(string: "下划线文字")
+        mutableStr.insert(insertStr, at: selectedRange.location)
+        
+        // 设置文字属性
+        let attributes = [NSMutableAttributedString.Key.underlineStyle: 1]
+        // 添加属性
+        mutableStr.addAttributes(attributes, range: NSMakeRange(selectedRange.location, insertStr.length))
+        
+        // 更新文字
+        noteTextView.attributedText = mutableStr
+        // 更新光标位置
+        let newRange = NSMakeRange(mutableStr.length, 0)
+        noteTextView.selectedRange = newRange
+    }
     
     // 添加文字
     @objc private func addText() {
@@ -101,11 +138,15 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         let attStr = NSAttributedString(string: "欢迎使用！")
         mutableStr.insert(attStr, at: selectedRange.location)
         
+        let paraph = NSMutableParagraphStyle()
+        paraph.lineSpacing = 10
+        let attributes = [NSAttributedString.Key.font: textFont, NSAttributedString.Key.paragraphStyle: paraph]
+        
         // 改变可变文本的字体属性
-        mutableStr.addAttribute(NSAttributedString.Key.font, value: textFont, range: NSMakeRange(0, mutableStr.length))
+        mutableStr.addAttributes(attributes, range: NSMakeRange(0, mutableStr.length))
         
         // 再次记住新的光标位置
-        let newSelectedRange = NSMakeRange(selectedRange.location + mutableStr.length, 0)
+        let newSelectedRange = NSMakeRange(selectedRange.location + attStr.length, 0)
         
         // 重新给文本赋值
         noteTextView.attributedText = mutableStr
@@ -147,7 +188,6 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         
         // 设置可变字体的字体属性
         mutableStr.addAttributes([NSAttributedString.Key.font : textFont], range: NSMakeRange(0, mutableStr.length))
-        
         // 再次记住光标位置
         let newSelectedRange = NSMakeRange(mutableStr.length + 1, 0)
         
