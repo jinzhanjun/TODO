@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3B86E3E26D104D42FE10483A /* Pods_TODO.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 14F4973A6654ADEFE7273832 /* Pods_TODO.framework */; };
+		7B28FB952371CDA000116EC0 /* lineStyleLabelModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B28FB942371CDA000116EC0 /* lineStyleLabelModel.swift */; };
 		7E1A22CB236A738B0084B8F4 /* NoteTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1A22CA236A738B0084B8F4 /* NoteTextView.swift */; };
 		7E1D4B5B234E06AE00195E23 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E1D4B5A234E06AE00195E23 /* CategoryTableViewController.swift */; };
 		7E35ADBF234B5B7A00049F06 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 7E35ADBD234B5B7A00049F06 /* DataModel.xcdatamodeld */; };
@@ -27,6 +28,7 @@
 
 /* Begin PBXFileReference section */
 		14F4973A6654ADEFE7273832 /* Pods_TODO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TODO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7B28FB942371CDA000116EC0 /* lineStyleLabelModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = lineStyleLabelModel.swift; sourceTree = "<group>"; };
 		7B4874F123710C4600A6E754 /* ChameleonFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = ChameleonFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B4874F523710C4B00A6E754 /* SwipeCellKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = SwipeCellKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7E1A22CA236A738B0084B8F4 /* NoteTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteTextView.swift; sourceTree = "<group>"; };
@@ -106,6 +108,7 @@
 				7ECA8C98234AFD4E00A7D191 /* SceneDelegate.swift */,
 				7E1A22CA236A738B0084B8F4 /* NoteTextView.swift */,
 				7E9AA49E2358CB15007B6E88 /* NoteViewController.swift */,
+				7B28FB942371CDA000116EC0 /* lineStyleLabelModel.swift */,
 				7E35ADBD234B5B7A00049F06 /* DataModel.xcdatamodeld */,
 				7E1D4B5A234E06AE00195E23 /* CategoryTableViewController.swift */,
 				7ECA8C9C234AFD4E00A7D191 /* Main.storyboard */,
@@ -242,6 +245,7 @@
 				7E9AA49F2358CB15007B6E88 /* NoteViewController.swift in Sources */,
 				7E72225D235DE4C100FCB5E4 /* MainNavController.swift in Sources */,
 				7E35ADBF234B5B7A00049F06 /* DataModel.xcdatamodeld in Sources */,
+				7B28FB952371CDA000116EC0 /* lineStyleLabelModel.swift in Sources */,
 				7E1D4B5B234E06AE00195E23 /* CategoryTableViewController.swift in Sources */,
 				7ECA8C97234AFD4E00A7D191 /* AppDelegate.swift in Sources */,
 				7E72225B235DE45500FCB5E4 /* BearViewController.swift in Sources */,

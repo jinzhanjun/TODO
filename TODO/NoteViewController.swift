@@ -19,6 +19,14 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     let noteTextView: NoteTextView = NoteTextView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height - 44))
     /// 工具栏
     let toolBar: UIToolbar = UIToolbar(frame: CGRect(x: 0, y: UIScreen.main.bounds.height - 44, width: UIScreen.main.bounds.width, height: 44))
+
+    /// 行标志数组
+    var lineStyleLabelModelArray: [lineStyleLabelModel]? = [] {
+        didSet {
+            guard let newArray = lineStyleLabelModelArray else {return}
+            noteTextView.lineStyleLabelModelArray = newArray
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -65,9 +73,12 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         let rect = textView.caretRect(for: selectedRange!.end)
         if text == "\n" {
             // 添加段落标志
-            if let textView = textView as? NoteTextView {
-                textView.addLineStyleLabel(by: rect, with: "H1")
+            let lineLabelModel = lineStyleLabelModel(name: "H1", location: rect)
+            guard let modelArray = lineStyleLabelModelArray else {return true}
+            let tempArray = modelArray.contains { (model) -> Bool in
+                model.location == rect
             }
+            !tempArray ? lineStyleLabelModelArray?.append(lineLabelModel) : ()
         }
         return true
     }
