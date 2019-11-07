@@ -120,25 +120,25 @@ class ToDoItemListViewController: UIViewController, UITableViewDelegate, UITable
             
             if let sender = sender as? IndexPath {
                 destinationVC.noteTitle = noteItemsArray[sender.row].textIsNil ? "" : noteItemsArray[sender.row].title
-                destinationVC.block = {(noteText) in
-                    self.noteItemsArray[sender.row].textIsNil = (noteText.count == 0) ? true : false
-                    self.noteItemsArray[sender.row].title = self.noteItemsArray[sender.row].textIsNil ? "思考一下，再写点什么" : noteText
+                destinationVC.block = {[weak self] (noteText) in
+                    self?.noteItemsArray[sender.row].textIsNil = (noteText.count == 0) ? true : false
+                    self?.noteItemsArray[sender.row].title = (self?.noteItemsArray[sender.row].textIsNil)! ? "思考一下，再写点什么" : noteText
                     DispatchQueue.main.async {
-                        self.saveNotes()
+                        self?.saveNotes()
                     }
                 }
             } else {
-                destinationVC.block = {(noteText) in
-                    let item = Items(context: self.context!)
+                destinationVC.block = {[weak self] (noteText) in
+                    let item = Items(context: (self?.context)!)
                     item.title = noteText
                     item.isDone = false
-                    item.parentCategory = self.selectedCategory
+                    item.parentCategory = self?.selectedCategory
                     item.textIsNil = (noteText.count == 0) ? true : false
                     item.title = item.textIsNil ? "思考一下，再写点什么" : noteText
-                    self.noteItemsArray.insert(item, at: 0)
-                    self.noteCount = self.noteItemsArray.count
+                    self?.noteItemsArray.insert(item, at: 0)
+                    self?.noteCount = self?.noteItemsArray.count
                     DispatchQueue.main.async {
-                        self.saveNotes()
+                        self?.saveNotes()
                     }
                 }
             }

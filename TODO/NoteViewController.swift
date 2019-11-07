@@ -49,10 +49,6 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     func textViewDidBeginEditing(_ textView: UITextView) {
         noteTextView.becomeFirstResponder()
     }
-    
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-//        print("滚动了")
-    }
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         if noteTextView.isFirstResponder { noteTextView.resignFirstResponder() }
     }
@@ -105,14 +101,14 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         let cancelAction = UIAlertAction(title: "取消", style: .destructive) { (_) in
             self.alertController = nil
         }
-        let addPicAction = UIAlertAction(title: "相册", style: .default) { (_) in
+        let addPicAction = UIAlertAction(title: "相册", style: .default) { [weak self](_) in
             
             if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
                 let imagePicker = UIImagePickerController()
                 imagePicker.delegate = self
                 imagePicker.sourceType = .photoLibrary
                 imagePicker.allowsEditing = true
-                self.present(imagePicker, animated: true) {
+                self?.present(imagePicker, animated: true) {
                 }
             } else {
                 print("读取相册错误")
@@ -127,8 +123,8 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     // 从系统相册选择照片后执行
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let img = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {return}
-        picker.dismiss(animated: true) {
-            self.insertPic(img, mode: .fitTextView)
+        picker.dismiss(animated: true) {[weak self] in
+            self?.insertPic(img, mode: .fitTextView)
         }
     }
     
@@ -179,17 +175,22 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         // 创建图片附件
         let imageAttachment = NSTextAttachment(data: nil, ofType: nil)
         var imageAttachmentString: NSAttributedString
-        imageAttachment.image = image
+        
         //设置图片的显示方式
         if mode == .fitTextLine {
+            let rect = CGRect(x: 0, y: -4, width: noteTextView.font!.lineHeight, height: noteTextView.font!.lineHeight)
             // 与文字一样大小
-            imageAttachment.bounds = CGRect(x: 0, y: -4, width: noteTextView.font!.lineHeight, height: noteTextView.font!.lineHeight)
+            imageAttachment.bounds = rect
+            imageAttachment.image = imageResize(img: image, withSize: rect.size)
         } else if mode == .fitTextView {
             // 撑满一行
             let imageWidth = noteTextView.frame.width - 10 - 2 * noteTextView.lineFragmentPadding
             let imageHeight = image.size.height / image.size.width * imageWidth
-            imageAttachment.bounds = CGRect(x: 0, y: 0, width: imageWidth, height: imageHeight)
+            let rect = CGRect(x: 0, y: 0, width: imageWidth, height: imageHeight)
+            imageAttachment.bounds = rect
+            imageAttachment.image = imageResize(img: image, withSize: rect.size)
         }
+        
         
         imageAttachmentString = NSAttributedString(attachment: imageAttachment)
         
@@ -229,6 +230,18 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
                 self.toolBar.transform = CGAffineTransform(translationX: 0, y: -frame.size.height)
             }
         }
+    }
+    
+    // 重画图像
+    private func imageResize(img: UIImage, withSize: CGSize) -> UIImage? {
+        let rect = CGRect(origin: CGPoint(), size: withSize)
+        // 开启图形上下文
+        UIGraphicsBeginImageContextWithOptions(withSize, true, 0)
+        // 在上下文中画图像
+        img.draw(in: rect)
+        // 获取图像
+        let resultImg = UIGraphicsGetImageFromCurrentImageContext()
+        return resultImg
     }
 
     /// 图片附件的尺寸样式
