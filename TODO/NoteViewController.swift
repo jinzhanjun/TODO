@@ -8,11 +8,13 @@
 
 import UIKit
 
-class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDelegate, UIImagePickerControllerDelegate {
+class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     /// 记事本内容
     @objc var noteTitle: String?
     var block: ((String) -> Void)?
+    
+    var alertController: UIAlertController?
     // 设置字体大小
     var textFont = UIFont.systemFont(ofSize: 23)
     /// 设置字体属性
@@ -58,7 +60,6 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     private func setupUI() {
         noteTextView.text = noteTitle
         view.addSubview(noteTextView)
-        
         setupToolBar()
     }
     // 设置工具栏
@@ -66,35 +67,17 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         toolBar.backgroundColor = UIColor.red
         let addTextBtn = UIBarButtonItem(title: "添加", style: .plain, target: self, action: Selector(("addText")))
         let lineBtn = UIBarButtonItem(title: "下划线", style: .plain, target: self, action: Selector(("lineText")))
-        toolBar.setItems([addTextBtn, lineBtn], animated: true)
+        let addPic = UIBarButtonItem(title: "图片", style: .plain, target: self, action: Selector(("showAlert")))
+        toolBar.setItems([addTextBtn, lineBtn, addPic], animated: true)
         view.addSubview(toolBar)
     }
     
-    func textViewDidChange(_ textView: UITextView) {
-        print("开始编辑")
-        // 获取textview的text，并将其转换为可变属性
-//        let mutableStr = NSMutableAttributedString(attributedString: textView.attributedText)
-//        mutableStr?.addAttributes(attrs, range: range)
-    }
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        // 获取光标位置
-        let selectedRange = textView.selectedTextRange
-        
-//
-//        // 获取textView的text，并将其转换成可变属性文字
-//        let mutableStr = NSMutableAttributedString(attributedString: textView.attributedText)
-//
-//        // 设置新插入数值的属性
-//        let newStr = NSMutableAttributedString(string: text)
-//        newStr.addAttributes(attrs, range: NSMakeRange(0, newStr.length))
-//        // 插入新的属性文本
-//        mutableStr.insert(newStr, at: textView.selectedRange.location)
-//
-//        textView.attributedText = mutableStr
-        
-        let rect = textView.caretRect(for: selectedRange!.end)
-//        print(rect)
+
         if text == "\n" {
+            //获取光标位置
+            let selectedRange = textView.selectedTextRange
+            let rect = textView.caretRect(for: selectedRange!.end)
             // 添加段落标志
             let lineLabelModel = lineStyleLabelModel(name: "H1", location: rect)
             guard let modelArray = lineStyleLabelModelArray else {return true}
@@ -110,6 +93,50 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         let textSize = NSString(string: string).size(withAttributes: [NSAttributedString.Key.font: font])
         let lineCount = ceil(Double(textSize.width) / Double(constrainedToWidth))
         return lineCount
+    }
+    
+    // alert
+    @objc private func showAlert() {
+        // 收回键盘，防止点击相册时键盘再次弹出
+        noteTextView.resignFirstResponder()
+        // 创建控制器
+        alertController = UIAlertController()
+        // 创建动作
+        let cancelAction = UIAlertAction(title: "取消", style: .destructive) { (_) in
+            self.alertController = nil
+        }
+        let addPicAction = UIAlertAction(title: "相册", style: .default) { (_) in
+            
+            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+                let imagePicker = UIImagePickerController()
+                imagePicker.delegate = self
+                imagePicker.sourceType = .photoLibrary
+                imagePicker.allowsEditing = true
+                self.present(imagePicker, animated: true) {
+                }
+            } else {
+                print("读取相册错误")
+            }
+        }
+        alertController?.addAction(addPicAction)
+        alertController?.addAction(cancelAction)
+        
+        present(alertController!, animated: true, completion: nil)
+    }
+    
+    // 从系统相册选择照片后执行
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let img = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {return}
+        picker.dismiss(animated: true) {
+            self.insertPic(img, mode: .fitTextView)
+        }
+    }
+    
+    // 添加图片
+    @objc private func addPic() {
+        // 创建文本附件
+//        var textAttachment = NSTextAttachment()
+        
     }
     // 下划线
     @objc private func lineText() {
@@ -144,11 +171,6 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         // 恢复光标位置(上面代码执行之后，光标会移到最后面)
         noteTextView.selectedRange = newSelectedRange
     }
-    
-    private func getSystem() {
-        
-    }
-    
     // 插入图片
     private func insertPic(_ image: UIImage, mode: ImageAttachmentMode = .default) {
         
@@ -164,7 +186,7 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
             imageAttachment.bounds = CGRect(x: 0, y: -4, width: noteTextView.font!.lineHeight, height: noteTextView.font!.lineHeight)
         } else if mode == .fitTextView {
             // 撑满一行
-            let imageWidth = noteTextView.frame.width - 10
+            let imageWidth = noteTextView.frame.width - 10 - 2 * noteTextView.lineFragmentPadding
             let imageHeight = image.size.height / image.size.width * imageWidth
             imageAttachment.bounds = CGRect(x: 0, y: 0, width: imageWidth, height: imageHeight)
         }
@@ -216,3 +238,4 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         case fitTextView // 市尺寸使用noteTextView
     }
 }
+

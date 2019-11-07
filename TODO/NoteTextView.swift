@@ -9,6 +9,7 @@
 import UIKit
 
 class NoteTextView: UITextView {
+    
     let lineFragmentPadding: CGFloat = 40
     
     var lineStyleLabelModelArray: [lineStyleLabelModel]? {
