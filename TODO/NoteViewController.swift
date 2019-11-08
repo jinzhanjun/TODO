@@ -69,19 +69,19 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-
-        if text == "\n" {
-            //获取光标位置
-            let selectedRange = textView.selectedTextRange
-            let rect = textView.caretRect(for: selectedRange!.end)
-            // 添加段落标志
-            let lineLabelModel = lineStyleLabelModel(name: "H1", location: rect)
-            guard let modelArray = lineStyleLabelModelArray else {return true}
-            let tempArray = modelArray.contains { (model) -> Bool in
-                model.location == rect
-            }
-            !tempArray ? lineStyleLabelModelArray?.append(lineLabelModel) : ()
-        }
+//
+//        if text == "\n" {
+//            //获取光标位置
+//            let selectedRange = textView.selectedTextRange
+//            let rect = textView.caretRect(for: selectedRange!.end)
+//            // 添加段落标志
+//            let lineLabelModel = lineStyleLabelModel(name: "H1", location: rect)
+//            guard let modelArray = lineStyleLabelModelArray else {return true}
+//            let tempArray = modelArray.contains { (model) -> Bool in
+//                model.location == rect
+//            }
+//            !tempArray ? lineStyleLabelModelArray?.append(lineLabelModel) : ()
+//        }
         return true
     }
     
@@ -114,6 +114,18 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
                 print("读取相册错误")
             }
         }
+        
+        let addCameraPicAction = UIAlertAction(title: "相机", style: .default) { [weak self] (_) in
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                let cameraPicker = UIImagePickerController()
+                cameraPicker.delegate = self
+                cameraPicker.sourceType = .camera
+                cameraPicker.allowsEditing = true
+                self?.present(cameraPicker, animated: true) { }
+            }
+        }
+        
+        alertController?.addAction(addCameraPicAction)
         alertController?.addAction(addPicAction)
         alertController?.addAction(cancelAction)
         
@@ -126,13 +138,6 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         picker.dismiss(animated: true) {[weak self] in
             self?.insertPic(img, mode: .fitTextView)
         }
-    }
-    
-    // 添加图片
-    @objc private func addPic() {
-        // 创建文本附件
-//        var textAttachment = NSTextAttachment()
-        
     }
     // 下划线
     @objc private func lineText() {
@@ -215,7 +220,6 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     }
     
     @objc private func keyboardWillChangeFrame(notification: NSNotification) {
-        
         guard let frame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect,
             let duration = notification.userInfo?[UIResponder.keyboardAnimationDurationUserInfoKey] as? Double
             else {return}
