@@ -28,6 +28,19 @@
 		7ECA8CA3234AFD4F00A7D191 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7ECA8CA1234AFD4F00A7D191 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		7BD40DD52379AACC00977403 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		14F4973A6654ADEFE7273832 /* Pods_TODO.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TODO.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B28FB942371CDA000116EC0 /* lineStyleLabelModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = lineStyleLabelModel.swift; sourceTree = "<group>"; };
@@ -141,6 +154,7 @@
 				7ECA8C90234AFD4E00A7D191 /* Frameworks */,
 				7ECA8C91234AFD4E00A7D191 /* Resources */,
 				8DA51EFC9DA35BBA20881824 /* [CP] Embed Pods Frameworks */,
+				7BD40DD52379AACC00977403 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -416,6 +430,19 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					"\"ChameleonFramework\"",
+					"-framework",
+					"\"CoreGraphics\"",
+					"-framework",
+					"\"QuartzCore\"",
+					"-framework",
+					"\"SwipeCellKit\"",
+					"-framework",
+					"\"UIKit\"",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = FlyBirds.TODO;
 				PRODUCT_NAME = "$(TARGET_NAME)";

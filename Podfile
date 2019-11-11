@@ -9,5 +9,4 @@ target 'TODO' do
 
  pod 'SwipeCellKit'
  pod 'ChameleonFramework'
-
 end
