@@ -84,7 +84,6 @@ class NoteTextView: UITextView {
             imageAttachment.image = imageResize(img: image, withSize: rect.size)
         }
         
-        
         imageAttachmentString = NSAttributedString(attachment: imageAttachment)
         
         // 获得目前光标的位置
@@ -155,6 +154,43 @@ class NoteTextView: UITextView {
         case `default` // 默认（不改变大小）
         case fitTextLine // 使尺寸适应行高
         case fitTextView // 市尺寸使用noteTextView
+    }
+    
+    // 根据文本以及文本属性返回文本框大小
+    class func getStringRect(with string: String, inTextView textView: UITextView, withAttributes: [NSAttributedString.Key: Any]) -> CGSize {
+        // 获取textView内容的宽度
+        var contentWidth = textView.frame.size.width
+        // 需要删除边距
+        // 计算边距宽度
+        let broadWidth =
+                textView.contentInset.left
+                + textView.contentInset.right
+                + textView.textContainerInset.left
+                + textView.textContainerInset.right
+                + textView.textContainer.lineFragmentPadding
+                + textView.textContainer.lineFragmentPadding
+        // 计算边距高度
+        let broadHeight =
+            textView.contentInset.top
+            + textView.contentInset.bottom
+            + textView.textContainerInset.top
+            + textView.textContainerInset.bottom
+        
+        //删除宽度边距
+        contentWidth -= broadWidth
+        // 创建需要计算的文本内容大小
+        let InSize = CGSize(width: contentWidth, height: CGFloat.greatestFiniteMagnitude)
+        
+//        let paragraphStyle = NSMutableParagraphStyle()
+//        paragraphStyle.lineBreakMode = textView.textContainer.lineBreakMode
+//
+//        let attributes = [NSAttributedString.Key.font: textFont, NSAttributedString.Key.paragraphStyle: paragraphStyle]
+        
+        let calculatedSize = string.boundingRect(with: InSize, options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: withAttributes, context: nil).size
+        
+        let adjustSize = CGSize(width: ceil(calculatedSize.width), height: ceil(calculatedSize.height + broadHeight))
+//        print("adjustSize = \(adjustSize)")
+        return adjustSize
     }
 }
 
