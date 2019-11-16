@@ -14,20 +14,27 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         case appear
         case disappear
     }
-    /// textView的最大高度
-    var textViewMaxHeight: CGFloat = 100 {
-        didSet {
-            textViewTextHeight = (textViewTextHeight > textViewMaxHeight) ? textViewMaxHeight : textViewTextHeight
-        }
-    }
+    /// textView的最大高度 // 100是随意设置的
+    var textViewMaxHeight: CGFloat = 100
     /// textView的文本高度
-    var textViewTextHeight: CGFloat = 0
+    var textViewTextHeight: CGFloat = 44
+    
+    var textViewShowHeight: CGFloat {
+//        switch keyBoardAppearence {
+//        case .appear:
+//            return (textViewTextHeight > textViewMaxHeight) ? textViewMaxHeight : textViewTextHeight
+//        case .disappear:
+//            return (textViewTextHeight > textViewMaxHeight) ? 
+//        }
+        return (textViewTextHeight > textViewMaxHeight) ? textViewMaxHeight : textViewTextHeight
+    }
     
     /// 键盘高度
     var keyBoardHeight: CGFloat?
     
     /// 记事本内容
     @objc var noteTitle: String?
+    
     var block: ((String) -> Void)?
     
     var alertController: UIAlertController?
@@ -35,7 +42,6 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     var textFont = UIFont.systemFont(ofSize: 23)
     /// 设置字体属性
     var attrs: [NSAttributedString.Key: Any] = [NSAttributedString.Key.font: 16]
-    
     
     /// 设置光标所在位置
     var selectedRange: NSRange?
@@ -51,14 +57,11 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
             switch keyBoardAppearence {
             case .appear:
                 textViewMaxHeight = UIScreen.main.bounds.height - (keyBoardHeight ?? 0) - toolBar.bounds.height - 64
-                print(textViewMaxHeight)
             case .disappear:
                 textViewMaxHeight = UIScreen.main.bounds.height - toolBar.bounds.height - 64
-                print(textViewMaxHeight)
             }
         }
     }
-
     /// 段落标志模型数组
     var lineStyleLabelModelArray: [lineStyleLabelModel]? = [] {
         didSet {
@@ -119,6 +122,27 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     // 文本变化后调用该方法
     func textViewDidChange(_ textView: UITextView) {
         
+//        let paragraphStyle = NSMutableParagraphStyle()
+//        paragraphStyle.lineBreakMode = textView.textContainer.lineBreakMode
+//
+//        let attributes = [NSAttributedString.Key.font: textFont, NSAttributedString.Key.paragraphStyle: paragraphStyle]
+//
+//        let mulAttriString = NSMutableAttributedString(attributedString: textView.attributedText)
+//        //        let selectedRange = noteTextView.selectedRange
+//        mulAttriString.addAttributes(attributes, range: NSRange(location: 0, length: mulAttriString.length))
+//
+//        var size = NoteTextView.getStringRect(with: textView.text, inTextView: textView, withAttributes: attributes)
+//        textViewTextHeight = size.height
+//        // 如果文本高度大于最大高度，textView高度为最大高度；反之为文本高度
+//        size.height = (size.height > textViewMaxHeight) ? textViewMaxHeight : size.height
+//        size.width = UIScreen.main.bounds.width
+//        //        print(size)
+////        textView.attributedText = mulAttriString
+//        // 更新textView的框架
+//        refreshViewFrame(withSize: size, toView: textView)
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.lineBreakMode = textView.textContainer.lineBreakMode
         
@@ -128,7 +152,7 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         //        let selectedRange = noteTextView.selectedRange
         mulAttriString.addAttributes(attributes, range: NSRange(location: 0, length: mulAttriString.length))
         
-        var size = NoteTextView.getStringRect(with: textView.text, inTextView: textView, withAttributes: attributes)
+        var size = NoteTextView.getStringRect(with: textView.text + text, inTextView: textView, withAttributes: attributes)
         textViewTextHeight = size.height
         // 如果文本高度大于最大高度，textView高度为最大高度；反之为文本高度
         size.height = (size.height > textViewMaxHeight) ? textViewMaxHeight : size.height
@@ -137,6 +161,7 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         textView.attributedText = mulAttriString
         // 更新textView的框架
         refreshViewFrame(withSize: size, toView: textView)
+        return true
     }
     
     // 更新textView的框架
@@ -222,7 +247,7 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
             UIView.animate(withDuration: duration){
                 self.toolBar.transform = CGAffineTransform(translationX: 0, y: 0)
                 // 更新textView的frame
-                self.refreshViewFrame(withSize: CGSize(width: UIScreen.main.bounds.width, height: self.textViewTextHeight), toView: self.noteTextView)
+                self.refreshViewFrame(withSize: CGSize(width: UIScreen.main.bounds.width, height: self.textViewShowHeight), toView: self.noteTextView)
             }
         }
         // 键盘出现
@@ -233,7 +258,7 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
             UIView.animate(withDuration: duration){
                 self.toolBar.transform = CGAffineTransform(translationX: 0, y: -frame.size.height)
                 // 更新textView的frame
-                self.refreshViewFrame(withSize: CGSize(width: UIScreen.main.bounds.width, height: self.textViewTextHeight), toView: self.noteTextView)
+                self.refreshViewFrame(withSize: CGSize(width: UIScreen.main.bounds.width, height: self.textViewShowHeight), toView: self.noteTextView)
             }
         }
     }

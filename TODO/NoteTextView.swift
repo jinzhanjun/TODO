@@ -134,6 +134,7 @@ class NoteTextView: UITextView {
         
         // 恢复光标位置(上面代码执行之后，光标会移到最后面)
         self.selectedRange = newSelectedRange
+        self.scrollRangeToVisible(newSelectedRange)
     }
     
     
