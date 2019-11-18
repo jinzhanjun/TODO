@@ -20,12 +20,6 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     var textViewTextHeight: CGFloat = 44
     
     var textViewShowHeight: CGFloat {
-//        switch keyBoardAppearence {
-//        case .appear:
-//            return (textViewTextHeight > textViewMaxHeight) ? textViewMaxHeight : textViewTextHeight
-//        case .disappear:
-//            return (textViewTextHeight > textViewMaxHeight) ? 
-//        }
         return (textViewTextHeight > textViewMaxHeight) ? textViewMaxHeight : textViewTextHeight
     }
     
@@ -41,8 +35,9 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     // 设置字体大小
     var textFont = UIFont.systemFont(ofSize: 23)
     /// 设置字体属性
-    var attrs: [NSAttributedString.Key: Any] = [NSAttributedString.Key.font: 16]
-    
+    var attrs: [NSAttributedString.Key: Any] = [:]
+    /// 设置属性数组
+    var attrsArray: [[NSAttributedString.Key: Any]] = [[:]]
     /// 设置光标所在位置
     var selectedRange: NSRange?
     
@@ -79,7 +74,9 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     }
     
     override func viewWillDisappear(_ animated: Bool) {
-        block?(noteTextView.text)
+        let strings = noteTextView.attributedText.attributedSubstring(from: NSRange(location: 0, length: noteTextView.attributedText.length))
+        let array = strings.string.components(separatedBy: "\n")
+        block?(array.first!)
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
@@ -104,6 +101,9 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         noteTextView.backgroundColor = UIColor.green
         noteTextView.contentInset.top = 10
         noteTextView.contentInset.bottom = 10
+        
+        // 设置为默认文字属性
+        attrs = noteTextView.defaultAttributes
         // 避免闪烁问题
         noteTextView.layoutManager.allowsNonContiguousLayout = false
         view.addSubview(noteTextView)
@@ -112,8 +112,8 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     // 设置工具栏
     private func setupToolBar() {
         toolBar.backgroundColor = UIColor.red
-        let addTextBtn = UIBarButtonItem(title: "添加", style: .plain, target: self, action: Selector(("addText")))
-        let lineBtn = UIBarButtonItem(title: "下划线", style: .plain, target: self, action: Selector(("lineText")))
+        let addTextBtn = UIBarButtonItem(title: "完成", style: .plain, target: self, action: Selector(("completed")))
+        let lineBtn = UIBarButtonItem(title: "标题", style: .plain, target: self, action: Selector(("lineText")))
         let addPic = UIBarButtonItem(title: "图片", style: .plain, target: self, action: Selector(("showAlert")))
         toolBar.setItems([addTextBtn, lineBtn, addPic], animated: true)
         view.addSubview(toolBar)
@@ -121,46 +121,28 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     
     // 文本变化后调用该方法
     func textViewDidChange(_ textView: UITextView) {
-        
-//        let paragraphStyle = NSMutableParagraphStyle()
-//        paragraphStyle.lineBreakMode = textView.textContainer.lineBreakMode
-//
-//        let attributes = [NSAttributedString.Key.font: textFont, NSAttributedString.Key.paragraphStyle: paragraphStyle]
-//
-//        let mulAttriString = NSMutableAttributedString(attributedString: textView.attributedText)
-//        //        let selectedRange = noteTextView.selectedRange
-//        mulAttriString.addAttributes(attributes, range: NSRange(location: 0, length: mulAttriString.length))
-//
-//        var size = NoteTextView.getStringRect(with: textView.text, inTextView: textView, withAttributes: attributes)
-//        textViewTextHeight = size.height
-//        // 如果文本高度大于最大高度，textView高度为最大高度；反之为文本高度
-//        size.height = (size.height > textViewMaxHeight) ? textViewMaxHeight : size.height
-//        size.width = UIScreen.main.bounds.width
-//        //        print(size)
-////        textView.attributedText = mulAttriString
-//        // 更新textView的框架
-//        refreshViewFrame(withSize: size, toView: textView)
-    }
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineBreakMode = textView.textContainer.lineBreakMode
-        
-        let attributes = [NSAttributedString.Key.font: textFont, NSAttributedString.Key.paragraphStyle: paragraphStyle]
-        
-        let mulAttriString = NSMutableAttributedString(attributedString: textView.attributedText)
-        //        let selectedRange = noteTextView.selectedRange
-        mulAttriString.addAttributes(attributes, range: NSRange(location: 0, length: mulAttriString.length))
-        
-        var size = NoteTextView.getStringRect(with: textView.text + text, inTextView: textView, withAttributes: attributes)
+        var size = NoteTextView.getStringRect(with: textView.text, inTextView: textView, withAttributes: attrs)
         textViewTextHeight = size.height
         // 如果文本高度大于最大高度，textView高度为最大高度；反之为文本高度
         size.height = (size.height > textViewMaxHeight) ? textViewMaxHeight : size.height
         size.width = UIScreen.main.bounds.width
-        //        print(size)
-        textView.attributedText = mulAttriString
         // 更新textView的框架
         refreshViewFrame(withSize: size, toView: textView)
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        
+        if text == "\n" {
+            let paragraphStyle = NSMutableParagraphStyle()
+            paragraphStyle.lineSpacing = 5
+            paragraphStyle.paragraphSpacingBefore = 2
+            
+            attrs[NSAttributedString.Key.font] = UIFont.systemFont(ofSize: 15)
+            attrs.updateValue(paragraphStyle, forKey: NSAttributedString.Key.paragraphStyle)
+            // 将属性添加入数组
+            attrsArray.append(attrs)
+            textView.typingAttributes = attrs
+        }
         return true
     }
     
@@ -218,8 +200,8 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
         present(alertController!, animated: true, completion: nil)
     }
     
-    @objc private func addText() {
-        noteTextView.addText()
+    @objc private func completed() {
+        noteTextView.completed()
     }
     
     // 从系统相册选择照片后执行
@@ -231,9 +213,14 @@ class NoteViewController: UIViewController, UITextViewDelegate, UIScrollViewDele
     }
     // 下划线
     @objc private func lineText() {
-        noteTextView.typingAttributes = [NSMutableAttributedString.Key.underlineStyle: 1]
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.paragraphSpacingBefore = 20
+        paragraphStyle.lineSpacing = 2
+        paragraphStyle.lineBreakMode = noteTextView.textContainer.lineBreakMode
+        attrs = [NSAttributedString.Key.underlineStyle: 1, NSAttributedString.Key.font: textFont, NSAttributedString.Key.paragraphStyle: paragraphStyle]
+        attrsArray.append(attrs)
+        noteTextView.typingAttributes = attrs
     }
-    
     
     // 键盘出现消失动画
     @objc private func keyboardWillChangeFrame(notification: NSNotification) {

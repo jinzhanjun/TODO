@@ -10,8 +10,12 @@ import UIKit
 
 class NoteTextView: UITextView {
     
-    var textFont = UIFont.systemFont(ofSize: 23)
+    let defaultTextFont = UIFont.systemFont(ofSize: 23)
     
+    // 设置默认段落样式
+    let defaultParagraphStyle: NSMutableParagraphStyle = NSMutableParagraphStyle()
+    // 设置默认属性
+    var defaultAttributes: [NSAttributedString.Key: Any] = [:]
     let lineFragmentPadding: CGFloat = 40
     
     var lineStyleLabelModelArray: [lineStyleLabelModel]? {
@@ -45,7 +49,33 @@ class NoteTextView: UITextView {
     }
     
     private func setupUI() {
+        
+        // 设置段落格式换行方式
+        /***
+         case byWordWrapping // Wrap at word boundaries, default     单词换行，第一行末尾和第二行末尾都保留完整的单词（默认）
+
+         case byCharWrapping // Wrap at character boundaries   字符换行，与Clip的区别在第一行，将最后一个单词截断了
+
+         case byClipping // Simply clip   裁剪，两行能显示多少就显示多少
+
+         case byTruncatingHead // Truncate at head of line: "...wxyz"   头部截断，第一行末尾是完整单词，第二行最前面三个点来表示省略内容
+
+         case byTruncatingTail // Truncate at tail of line: "abcd..."    尾部截断，第一行末尾是完整单词，第二行尾部三个点来省略内容
+
+         case byTruncatingMiddle // Truncate middle of line:  "ab...yz"  中间截断，第一行末尾是完整单词，第二行中间三个点来表示省略内容
+         ***/
+        // 简单截断
+        defaultParagraphStyle.lineBreakMode = .byCharWrapping
+        // 行距 10
+        defaultParagraphStyle.lineSpacing = 10
+        // 与上一段间距 10
+        defaultParagraphStyle.paragraphSpacingBefore = 10
+        defaultAttributes = [NSAttributedString.Key.font: defaultTextFont, NSAttributedString.Key.paragraphStyle: defaultParagraphStyle]
+        
+        // 设置默认属性
+        typingAttributes = defaultAttributes
         self.textContainer.lineFragmentPadding = lineFragmentPadding
+        
     }
     
     func addLineStyleLabel(by rect: CGRect, with string: String) {
@@ -92,52 +122,28 @@ class NoteTextView: UITextView {
         mutableStr.insert(imageAttachmentString, at: selectedRange.location)
         
         // 设置可变字体的字体属性
-        mutableStr.addAttributes([NSAttributedString.Key.font : textFont], range: NSMakeRange(0, mutableStr.length))
+        mutableStr.addAttributes([NSAttributedString.Key.font : defaultTextFont], range: NSMakeRange(0, mutableStr.length))
         // 再次记住光标位置
         let newSelectedRange = NSMakeRange(mutableStr.length + 1, 0)
         
         // 重新给文本赋值
         self.attributedText = mutableStr
+        let height = NoteTextView.getAttributedStringRect(with: mutableStr, inTextView: self).height
         
+        let tempSize = CGSize(width: UIScreen.main.bounds.width, height: height)
+        
+        self.frame.size = tempSize
         // 恢复光标位置（上面代码执行完毕之后，光标会移到最后面）
         self.selectedRange = newSelectedRange
         
         // 移动滚动条（确保光标在可视区域之内）
         self.scrollRangeToVisible(newSelectedRange)
     }
-    
-    
     // 添加文字
-    @objc public func addText() {
-        // 获取textView的文本，并且转换成可变文本
-        let mutableStr = NSMutableAttributedString(attributedString: self.attributedText)
+    @objc public func completed() {
         
-        // 获取当前光标位置
-        let selectedRange = self.selectedRange
-        
-        // 插入文字
-        let attStr = NSAttributedString(string: "欢迎使用！")
-        mutableStr.insert(attStr, at: selectedRange.location)
-        
-        let paraph = NSMutableParagraphStyle()
-        paraph.lineSpacing = 10
-        let attributes = [NSAttributedString.Key.font: textFont, NSAttributedString.Key.paragraphStyle: paraph]
-        
-        // 改变可变文本的字体属性
-        mutableStr.addAttributes(attributes, range: NSMakeRange(0, mutableStr.length))
-        
-        // 再次记住新的光标位置
-        let newSelectedRange = NSMakeRange(selectedRange.location + attStr.length, 0)
-        
-        // 重新给文本赋值
-        self.attributedText = mutableStr
-        
-        // 恢复光标位置(上面代码执行之后，光标会移到最后面)
-        self.selectedRange = newSelectedRange
-        self.scrollRangeToVisible(newSelectedRange)
     }
-    
-    
+
     // 重画图像
     private func imageResize(img: UIImage, withSize: CGSize) -> UIImage? {
         let rect = CGRect(origin: CGPoint(), size: withSize)
@@ -181,16 +187,42 @@ class NoteTextView: UITextView {
         contentWidth -= broadWidth
         // 创建需要计算的文本内容大小
         let InSize = CGSize(width: contentWidth, height: CGFloat.greatestFiniteMagnitude)
-        
-//        let paragraphStyle = NSMutableParagraphStyle()
-//        paragraphStyle.lineBreakMode = textView.textContainer.lineBreakMode
-//
-//        let attributes = [NSAttributedString.Key.font: textFont, NSAttributedString.Key.paragraphStyle: paragraphStyle]
-        
+
         let calculatedSize = string.boundingRect(with: InSize, options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: withAttributes, context: nil).size
         
         let adjustSize = CGSize(width: ceil(calculatedSize.width), height: ceil(calculatedSize.height + broadHeight))
 //        print("adjustSize = \(adjustSize)")
+        return adjustSize
+    }
+    
+    class func getAttributedStringRect(with attrString: NSAttributedString, inTextView textView: UITextView) -> CGSize {
+        // 获取textView内容的宽度
+        var contentWidth = textView.frame.size.width
+        // 需要删除边距
+        // 计算边距宽度
+        let broadWidth =
+            textView.contentInset.left
+                + textView.contentInset.right
+                + textView.textContainerInset.left
+                + textView.textContainerInset.right
+                + textView.textContainer.lineFragmentPadding
+                + textView.textContainer.lineFragmentPadding
+        // 计算边距高度
+        let broadHeight =
+            textView.contentInset.top
+                + textView.contentInset.bottom
+                + textView.textContainerInset.top
+                + textView.textContainerInset.bottom
+        
+        //删除宽度边距
+        contentWidth -= broadWidth
+        // 创建需要计算的文本内容大小
+        let InSize = CGSize(width: contentWidth, height: CGFloat.greatestFiniteMagnitude)
+        
+        let calculatedSize = attrString.boundingRect(with: InSize, options: [.usesFontLeading, .usesLineFragmentOrigin], context: nil).size
+        
+        let adjustSize = CGSize(width: ceil(calculatedSize.width), height: ceil(calculatedSize.height + broadHeight))
+        //        print("adjustSize = \(adjustSize)")
         return adjustSize
     }
 }
